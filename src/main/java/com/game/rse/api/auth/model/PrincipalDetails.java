@@ -1,6 +1,6 @@
 package com.game.rse.api.auth.model;
 
-import com.example.securitystudy.user.model.User;
+import com.game.rse.api.auth.user.model.User;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;

@@ -1,8 +1,8 @@
 package com.game.rse.api.auth.jwt.config;
 
-import com.example.securitystudy.auth.AuthService;
-import com.example.securitystudy.auth.jwt.JwtTokenProvider;
-import com.example.securitystudy.auth.model.PrincipalDetails;
+import com.game.rse.api.auth.AuthService;
+import com.game.rse.api.auth.jwt.JwtTokenProvider;
+import com.game.rse.api.auth.model.PrincipalDetails;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

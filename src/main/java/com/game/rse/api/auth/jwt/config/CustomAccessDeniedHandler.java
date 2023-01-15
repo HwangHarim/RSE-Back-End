@@ -1,6 +1,6 @@
 package com.game.rse.api.auth.jwt.config;
 
-import static com.example.securitystudy.util.BaseResponseStatus.INVALID_USER_JWT;
+import static com.game.rse.api.auth.util.BaseResponseStatus.INVALID_USER_JWT;
 
 import java.io.IOException;
 import javax.servlet.ServletException;

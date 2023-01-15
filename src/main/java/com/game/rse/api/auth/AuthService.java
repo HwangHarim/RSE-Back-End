@@ -1,6 +1,6 @@
 package com.game.rse.api.auth;
 
-import com.example.securitystudy.auth.jwt.JwtTokenProvider;
+import com.game.rse.api.auth.jwt.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

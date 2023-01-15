@@ -1,10 +1,10 @@
 package com.game.rse.api.auth;
 
-import com.example.securitystudy.auth.model.PrincipalDetails;
-import com.example.securitystudy.user.UserProvider;
-import com.example.securitystudy.user.UserService;
-import com.example.securitystudy.user.model.User;
-import com.example.securitystudy.util.BaseException;
+import com.game.rse.api.auth.model.PrincipalDetails;
+import com.game.rse.api.auth.user.UserProvider;
+import com.game.rse.api.auth.user.UserService;
+import com.game.rse.api.auth.user.model.User;
+import com.game.rse.api.auth.util.BaseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +32,7 @@ public class PrincipalOAuth2DetailsService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
+        System.out.println(oAuth2User.getAttributes());
 
         String username = oAuth2User.getAttributes().get("name").toString();
         String nickname = oAuth2User.getAttributes().get("name").toString();

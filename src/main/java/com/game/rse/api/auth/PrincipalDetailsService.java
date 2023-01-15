@@ -1,8 +1,9 @@
 package com.game.rse.api.auth;
 
-import com.example.securitystudy.auth.model.PrincipalDetails;
-import com.example.securitystudy.user.UserProvider;
-import com.example.securitystudy.util.BaseException;
+
+import com.game.rse.api.auth.model.PrincipalDetails;
+import com.game.rse.api.auth.user.UserProvider;
+import com.game.rse.api.auth.util.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

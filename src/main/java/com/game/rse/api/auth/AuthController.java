@@ -1,12 +1,16 @@
 package com.game.rse.api.auth;
 
-import com.example.securitystudy.auth.dto.*;
-import com.example.securitystudy.auth.jwt.JwtTokenProvider;
-import com.example.securitystudy.auth.model.PrincipalDetails;
-import com.example.securitystudy.user.UserService;
-import com.example.securitystudy.user.model.User;
-import com.example.securitystudy.util.BaseException;
-import com.example.securitystudy.util.BaseResponse;
+import com.game.rse.api.auth.dto.PostSigninAutoReq;
+import com.game.rse.api.auth.dto.PostSigninAutoRes;
+import com.game.rse.api.auth.dto.PostSigninReq;
+import com.game.rse.api.auth.dto.PostSigninRes;
+import com.game.rse.api.auth.dto.PostSignupReq;
+import com.game.rse.api.auth.jwt.JwtTokenProvider;
+import com.game.rse.api.auth.model.PrincipalDetails;
+import com.game.rse.api.auth.user.UserService;
+import com.game.rse.api.auth.user.model.User;
+import com.game.rse.api.auth.util.BaseException;
+import com.game.rse.api.auth.util.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
