@@ -103,9 +103,14 @@ public class BoardService {
     }
 
     @Transactional
-    public Long allView(Long id) {
-        return boardRepository.findById(id).get().getView();
+    public int updateView(Long id) {
+        return boardRepository.updateView(id);
     }
+
+//    @Transactional
+//    public Long allView(Long id) {
+//        return boardRepository.findById(id).get().getView();
+//    }
 
     public void deleteBoard(Long id){
         boardRepository.deleteById(id);

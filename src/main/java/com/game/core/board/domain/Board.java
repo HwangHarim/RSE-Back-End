@@ -79,11 +79,6 @@ public class Board extends BaseTime {
         this.type = type;
     }
 
-    public void upView(Long view){
-        ++view;
-        this.view = view;
-    }
-
     public void setLikeTag(LikeTag likeTag){
         this.likeTag = likeTag;
     }

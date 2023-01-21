@@ -42,7 +42,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController {
 
     private final BoardService boardService;
-    private final CommentService commentService;
     private final ResponseHandler responseHandler;
 
     @ApiOperation("board 전체 검색")
@@ -118,46 +117,16 @@ public class BoardController {
       );
     }
 
+    /*
+    * view 개수 추가 api
+    * */
     @ApiOperation("board view 추가")
-    @GetMapping("/{id}/read")
+    @GetMapping("/read/{id}")
     public ResponseEntity<ResponseDto> viewCount(@PathVariable Long id) {
-        Long views = boardService.allView(id); // views ++
+        int views = boardService.updateView(id); // views ++
         return  responseHandler.toResponseEntity(
             ResponseMessage.UPDATE_BOARD_VIEW_SUCCESS,
             views
         );
-    }
-
-    // 댓글 작성
-    @ApiOperation(value = "댓글 작성", notes = "댓글을 작성한다.")
-    @PostMapping("/{id}/comments")
-    public ResponseEntity<ResponseDto> writeComment(@PathVariable("id") Long id, @RequestBody CreateCommentRequest createCommentRequest) {
-        System.out.println(id);
-        System.out.println(createCommentRequest.getContent());
-        commentService.createComment(id, createCommentRequest);
-        return responseHandler.toResponseEntity(
-            ResponseMessage.CREATE_COMMENT_SUCCESS,
-            "댓글 작성을 완료했습니다."
-        );
-    }
-
-
-    // 게시글에 달린 댓글 모두 불러오기
-    @ApiOperation(value = "댓글 불러오기", notes = "게시글에 달린 댓글을 모두 불러온다.")
-    @GetMapping("{id}/comments")
-    public ResponseEntity<ResponseDto> getComments(@PathVariable("id") Long boardId) {
-        List<ReadCommentRequest> comments= commentService.getComments(boardId);
-        return responseHandler.toResponseEntity(ResponseMessage.READ_COMMENT_SUCCESS, comments);
-    }
-
-
-    // 댓글 삭제
-    @ApiOperation(value = "댓글 삭제", notes = "게시글에 달린 댓글을 삭제합니다.")
-    @DeleteMapping("/{id}/comments/{commentId}")
-    public ResponseEntity<ResponseDto> deleteComment(@PathVariable("id") Long boardId, @PathVariable("commentId") Long commentId) {
-        // 추후 JWT 로그인 기능을 추가하고나서, 세션에 로그인된 유저와 댓글 작성자를 비교해서, 맞으면 삭제 진행하고
-        // 틀리다면 예외처리를 해주면 된다.
-        commentService.deleteComment(commentId);
-        return responseHandler.toResponseEntity(ResponseMessage.DELETE_BOARD_SUCCESS, "댓글 삭제 완료");
     }
 } 

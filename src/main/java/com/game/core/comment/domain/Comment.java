@@ -48,4 +48,8 @@ public class Comment extends BaseTime {
         if (!board.getComments().contains(this))
             board.getComments().add(this);
     }
+
+    public void update(String comments){
+        this.content = comments;
+    }
 }

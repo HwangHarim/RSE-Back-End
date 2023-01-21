@@ -2,8 +2,10 @@ package com.game.core.comment.application;
 
 import com.game.core.board.domain.Board;
 import com.game.core.board.domain.vo.LikeTag;
+import com.game.core.board.dto.request.UpdateBoardRequest;
 import com.game.core.board.infrastructure.BoardRepository;
 import com.game.core.comment.dto.request.CreateCommentRequest;
+import com.game.core.comment.dto.request.UpdateCommentRequest;
 import com.game.core.comment.dto.response.ReadCommentRequest;
 import com.game.core.comment.infrastructure.CommentRepository;
 import com.game.core.error.dto.ErrorMessage;
@@ -35,6 +37,18 @@ public class CommentService {
                 .build()
         ));
         boardRepository.save(board);
+    }
+
+    @Transactional
+    public void updateComment(Long id, UpdateCommentRequest updateCommentRequest){
+        Comment comment = commentRepository.findById(id)
+            .orElseThrow(()-> {
+                throw new NullPointerException(ErrorMessage.NOT_FIND_ID_BOARD);
+            });
+        comment.update(
+            updateCommentRequest.getContent()
+        );
+        commentRepository.save(comment);
     }
 
     public List<ReadCommentRequest> getComments(Long boardId) {
