@@ -17,7 +17,6 @@ import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class BoardLike extends BaseTime {
@@ -26,10 +25,15 @@ public class BoardLike extends BaseTime {
     private long id;
 
     @Comment("member_id")
-    private String memberId;
+    private Long memberId;
 
     @Comment("board_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
+
+    public BoardLike(Long userId,Board board ) {
+      this.memberId = userId;
+      this.board = board;
+    }
 }

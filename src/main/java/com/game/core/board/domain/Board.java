@@ -1,7 +1,7 @@
 package com.game.core.board.domain;
 
 import com.game.core.common.domain.BaseTime;
-import com.game.core.File.domain.Photo;
+import com.game.core.file.domain.Photo;
 import com.game.core.board.domain.vo.LikeTag;
 import com.game.core.board.domain.vo.Type;
 import com.game.core.comment.domain.Comment;

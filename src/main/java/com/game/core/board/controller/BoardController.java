@@ -1,19 +1,17 @@
 package com.game.core.board.controller;
 
+import com.game.core.board.application.BoardLikeService;
 import com.game.core.board.application.BoardService;
-import com.game.core.comment.dto.response.ReadCommentRequest;
-import com.game.core.comment.dto.request.CreateCommentRequest;
-import com.game.core.common.dto.ResponseDto;
+import com.game.core.common.dto.Response.ResponseDto;
 import com.game.core.board.dto.request.CreateBoardRequest;
 import com.game.core.board.dto.request.UpdateBoardRequest;
-import com.game.core.comment.application.CommentService;
-import com.game.core.common.util.Handler.ResponseHandler;
-import com.game.core.common.dto.ResponseMessage;
+import com.game.core.common.dto.Response.Handler.ResponseHandler;
+import com.game.core.common.dto.Response.ResponseMessage;
+import com.game.core.member.application.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +40,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardController {
 
     private final BoardService boardService;
+
+    private final BoardLikeService boardLikeService;
+
+    private final UserService userService;
     private final ResponseHandler responseHandler;
 
     @ApiOperation("board 전체 검색")
@@ -87,25 +89,7 @@ public class BoardController {
         );
     }
 
-    @ApiOperation("board 즐겨 찾기")
-    @PatchMapping(value = "/{id}/like")
-    public ResponseEntity<ResponseDto> updateLikeBoard(@PathVariable("id") Long id){
-        boardService.setLike(id);
-        return responseHandler.toResponseEntity(
-            ResponseMessage.UPDATE_BOARD_SUCCESS,
-            "like_tag 변경"
-        );
-    }
 
-    @ApiOperation("board 즐겨 찾기 해제")
-    @PatchMapping(value = "/{id}/normal")
-    public ResponseEntity<ResponseDto> updateUnLikeBoard(@PathVariable("id") Long id){
-        boardService.setUnLike(id);
-        return responseHandler.toResponseEntity(
-            ResponseMessage.UPDATE_BOARD_SUCCESS,
-            "like_tag 변경"
-        );
-    }
 
     @ApiOperation("board 삭제")
     @DeleteMapping(value = "/{id}")

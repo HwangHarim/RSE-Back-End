@@ -3,6 +3,7 @@ package com.game.core.board.application;
 import com.game.core.board.domain.Board;
 import com.game.core.board.domain.vo.LikeTag;
 import com.game.core.board.domain.vo.Type;
+import com.game.core.board.infrastructure.BoardLikeRepository;
 import com.game.core.board.infrastructure.BoardRepository;
 import com.game.core.board.dto.request.CreateBoardRequest;
 import com.game.core.board.dto.request.UpdateBoardRequest;
@@ -75,23 +76,7 @@ public class BoardService {
             .build();
     }
 
-    public void setLike(Long id){
-        Board board = boardRepository.findById(id)
-            .orElseThrow(()-> {
-                throw new NullPointerException(ErrorMessage.NOT_FIND_ID_BOARD);
-            });
-        board.setLikeTag(LikeTag.LIKE_TAG);
-        boardRepository.save(board);
-    }
 
-    public void setUnLike(Long id){
-        Board board = boardRepository.findById(id)
-            .orElseThrow(()-> {
-                throw new NullPointerException(ErrorMessage.NOT_FIND_ID_BOARD);
-            });
-        board.setLikeTag(LikeTag.NORMAL);
-        boardRepository.save(board);
-    }
 
     public void changeTag(Long id, String tag){
         Board board = boardRepository.findById(id)
@@ -106,11 +91,6 @@ public class BoardService {
     public int updateView(Long id) {
         return boardRepository.updateView(id);
     }
-
-//    @Transactional
-//    public Long allView(Long id) {
-//        return boardRepository.findById(id).get().getView();
-//    }
 
     public void deleteBoard(Long id){
         boardRepository.deleteById(id);
