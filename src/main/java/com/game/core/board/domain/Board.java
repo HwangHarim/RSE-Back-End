@@ -1,10 +1,9 @@
 package com.game.core.board.domain;
 
-import com.game.core.common.domain.BaseTime;
-import com.game.core.file.domain.Photo;
-import com.game.core.board.domain.vo.LikeTag;
 import com.game.core.board.domain.vo.Type;
 import com.game.core.comment.domain.Comment;
+import com.game.core.common.domain.BaseTime;
+import com.game.core.file.domain.Photo;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -34,18 +33,16 @@ public class Board extends BaseTime {
     @Column(name = "board_id")
     private Long id;
 
-    private String nickName;
+    private String userName;
 
     @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String content;
 
     @Enumerated(EnumType.STRING)
     private Type type;
-
-    @Enumerated(EnumType.STRING)
-    private LikeTag likeTag;
 
     @Column(columnDefinition = "Long default 0", nullable = false)
     private Long view;
@@ -70,6 +67,10 @@ public class Board extends BaseTime {
             comment.setBoard(this);
     }
 
+    public void setUserName(String userName) {
+      this.userName = userName;
+    }
+
     public void update(String title, String content){
         this.title = title;
         this.content = content;
@@ -77,9 +78,5 @@ public class Board extends BaseTime {
 
     public void changeTage(Type type){
         this.type = type;
-    }
-
-    public void setLikeTag(LikeTag likeTag){
-        this.likeTag = likeTag;
     }
 }

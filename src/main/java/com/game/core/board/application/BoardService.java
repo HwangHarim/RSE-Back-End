@@ -1,9 +1,8 @@
 package com.game.core.board.application;
 
 import com.game.core.board.domain.Board;
-import com.game.core.board.domain.vo.LikeTag;
 import com.game.core.board.domain.vo.Type;
-import com.game.core.board.infrastructure.BoardLikeRepository;
+import com.game.core.board.dto.response.ReadBoardResponse;
 import com.game.core.board.infrastructure.BoardRepository;
 import com.game.core.board.dto.request.CreateBoardRequest;
 import com.game.core.board.dto.request.UpdateBoardRequest;
@@ -22,13 +21,13 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Page<CreateBoardRequest> getBoards(Pageable pageable){
+    public Page<ReadBoardResponse> getBoards(Pageable pageable){
         Page<Board> boardPage = boardRepository.findAll(pageable);
         return boardPage.map(
             Board ->
-                CreateBoardRequest.builder()
+                ReadBoardResponse.builder()
                     .id(Board.getId())
-                    .nickName(Board.getNickName())
+                    .userName(Board.getUserName())
                     .title(Board.getTitle())
                     .content(Board.getContent())
                     .createTime(Board.getCreatedDate())
@@ -38,13 +37,12 @@ public class BoardService {
     }
 
     @Transactional
-    public void createBoard(CreateBoardRequest createBoardRequest) {
+    public void createBoard(CreateBoardRequest createBoardRequest, String userName) {
         Board board = Board.builder()
-            .nickName(createBoardRequest.getNickName())
+            .userName(userName)
             .title(createBoardRequest.getTitle())
             .content(createBoardRequest.getContent())
-            .type(Type.BUG)
-            .likeTag(LikeTag.NORMAL)
+            .type(Type.valueOf(createBoardRequest.getType()))
             .build();
         boardRepository.save(board);
     }
@@ -62,15 +60,14 @@ public class BoardService {
         boardRepository.save(board);
     }
 
-    public CreateBoardRequest findBoard(Long id) {
+    public ReadBoardResponse findBoard(Long id) {
         Optional<Board> board = boardRepository.findById(id);
-        return CreateBoardRequest.builder()
+        return ReadBoardResponse.builder()
             .id(board.get().getId())
             .title(board.get().getTitle())
-            .nickName(board.get().getNickName())
+            .userName(board.get().getUserName())
             .content(board.get().getContent())
-            .like(LikeTag.NORMAL)
-            .type(board.get().getType())
+            .type(board.get().getType().name())
             .createTime(board.get().getCreatedDate())
             .modified(board.get().getModifiedDate())
             .build();

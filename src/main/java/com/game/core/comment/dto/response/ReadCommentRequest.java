@@ -1,6 +1,5 @@
 package com.game.core.comment.dto.response;
 
-import com.game.core.board.domain.vo.LikeTag;
 import lombok.Builder;
 import lombok.Data;
 

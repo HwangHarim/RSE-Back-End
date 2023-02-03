@@ -2,6 +2,7 @@ package com.game.core.board.controller;
 
 import com.game.core.board.application.BoardLikeService;
 import com.game.core.board.application.BoardService;
+import com.game.core.board.dto.response.ReadBoardResponse;
 import com.game.core.common.dto.Response.ResponseDto;
 import com.game.core.board.dto.request.CreateBoardRequest;
 import com.game.core.board.dto.request.UpdateBoardRequest;
@@ -41,8 +42,6 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    private final BoardLikeService boardLikeService;
-
     private final UserService userService;
     private final ResponseHandler responseHandler;
 
@@ -51,7 +50,7 @@ public class BoardController {
     public ResponseEntity<ResponseDto> getAllBoards(
         @PageableDefault(sort ="id", direction= Direction.ASC)
         Pageable pageable){
-        Page<CreateBoardRequest> boards = boardService.getBoards(pageable);
+        Page<ReadBoardResponse> boards = boardService.getBoards(pageable);
         return responseHandler.toResponseEntity(
             ResponseMessage.READ_ALL_BOARD_SUCCESS,
             boards
@@ -61,7 +60,7 @@ public class BoardController {
     @ApiOperation("board 생성")
     @PostMapping
     public ResponseEntity<ResponseDto> getBoard(@RequestBody CreateBoardRequest createBoardRequest){
-        boardService.createBoard(createBoardRequest);
+        boardService.createBoard(createBoardRequest, userService.getUserName());
         return responseHandler.toResponseEntity(
             ResponseMessage.CREATE_BOARD_SUCCESS,
             "board 생성이 완료 되었습니다."
@@ -71,7 +70,7 @@ public class BoardController {
     @ApiOperation("board 검색")
     @GetMapping(value = "/{id}")
     public ResponseEntity<ResponseDto> getBoard(@PathVariable("id") Long id){
-       CreateBoardRequest board = boardService.findBoard(id);
+       ReadBoardResponse board = boardService.findBoard(id);
         return responseHandler.toResponseEntity(
             ResponseMessage.READ_BOARD_SUCCESS,
             board

@@ -1,9 +1,18 @@
 package com.game.core.board.dto.response;
 
-import com.game.core.board.domain.BoardLike;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.time.LocalDateTime;
+import lombok.Builder;
+import lombok.Data;
 
+@Data
+@Builder
 public class ReadBoardLikeResponse{
-
-
+    private Long id;
+    private String userName;
+    private String title;
+    private String content;
+    private String type;
+    private LocalDateTime createTime;
+    private LocalDateTime modified;
+    private Long views;
 }
