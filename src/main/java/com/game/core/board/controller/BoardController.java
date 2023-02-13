@@ -1,14 +1,15 @@
 package com.game.core.board.controller;
 
-import com.game.core.board.application.BoardLikeService;
 import com.game.core.board.application.BoardService;
-import com.game.core.board.dto.response.ReadBoardResponse;
-import com.game.core.common.dto.Response.ResponseDto;
 import com.game.core.board.dto.request.CreateBoardRequest;
 import com.game.core.board.dto.request.UpdateBoardRequest;
+import com.game.core.board.dto.response.ReadBoardResponse;
 import com.game.core.common.dto.Response.Handler.ResponseHandler;
+import com.game.core.common.dto.Response.ResponseDto;
 import com.game.core.common.dto.Response.ResponseMessage;
 import com.game.core.member.application.UserService;
+import com.game.core.member.dto.LoggedInMember;
+import com.game.core.member.infrastructure.annotation.AuthMember;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -59,8 +61,8 @@ public class BoardController {
 
     @ApiOperation("board 생성")
     @PostMapping
-    public ResponseEntity<ResponseDto> getBoard(@RequestBody CreateBoardRequest createBoardRequest){
-        boardService.createBoard(createBoardRequest, userService.getUserName());
+    public ResponseEntity<ResponseDto> postBoard(@RequestBody CreateBoardRequest createBoardRequest){
+        boardService.createBoard(createBoardRequest, "하림");
         return responseHandler.toResponseEntity(
             ResponseMessage.CREATE_BOARD_SUCCESS,
             "board 생성이 완료 되었습니다."

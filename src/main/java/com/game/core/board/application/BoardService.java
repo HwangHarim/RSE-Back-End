@@ -8,9 +8,11 @@ import com.game.core.board.dto.request.CreateBoardRequest;
 import com.game.core.board.dto.request.UpdateBoardRequest;
 import com.game.core.error.dto.ErrorMessage;
 import com.game.core.error.exception.NullPointerException;
+import com.game.core.member.dto.LoggedInMember;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,9 +39,9 @@ public class BoardService {
     }
 
     @Transactional
-    public void createBoard(CreateBoardRequest createBoardRequest, String userName) {
+    public void createBoard(@NotNull CreateBoardRequest createBoardRequest, String user) {
         Board board = Board.builder()
-            .userName(userName)
+            .userName(user)
             .title(createBoardRequest.getTitle())
             .content(createBoardRequest.getContent())
             .type(Type.valueOf(createBoardRequest.getType()))

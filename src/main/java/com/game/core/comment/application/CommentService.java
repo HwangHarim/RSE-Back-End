@@ -2,7 +2,6 @@ package com.game.core.comment.application;
 
 import com.game.core.board.domain.Board;
 import com.game.core.board.domain.vo.LikeTag;
-import com.game.core.board.dto.request.UpdateBoardRequest;
 import com.game.core.board.infrastructure.BoardRepository;
 import com.game.core.comment.dto.request.CreateCommentRequest;
 import com.game.core.comment.dto.request.UpdateCommentRequest;

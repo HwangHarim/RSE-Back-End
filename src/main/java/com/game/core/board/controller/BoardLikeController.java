@@ -60,7 +60,7 @@ public class BoardLikeController {
     @ApiOperation("모든 board 즐겨 찾기")
     @GetMapping(value = "/all_like_board")
     public ResponseEntity<ResponseDto> allLikeBoard(){
-       List<Board>allLikeBoards =new ArrayList<>(boardLikeService.likeBoards(userService.getUserId()));
+       List<Board> allLikeBoards =new ArrayList<>(boardLikeService.likeBoards(userService.getUserId()));
         return responseHandler.toResponseEntity(
             ResponseMessage.UPDATE_BOARD_SUCCESS,
             allLikeBoards

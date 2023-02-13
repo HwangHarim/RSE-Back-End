@@ -37,4 +37,7 @@ out/
 ### VS Code ###
 .vscode/
 
+### ynl ###
 application-oauth.yml
+application-h2.yml
+application-slack.yml

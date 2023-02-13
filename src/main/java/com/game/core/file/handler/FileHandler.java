@@ -1,7 +1,7 @@
-package com.game.core.File.handler;
+package com.game.core.file.handler;
 
 
-import com.game.core.File.domain.Photo;
+import com.game.core.file.domain.Photo;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

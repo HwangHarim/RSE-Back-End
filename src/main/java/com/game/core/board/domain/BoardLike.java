@@ -25,14 +25,14 @@ public class BoardLike extends BaseTime {
     private long id;
 
     @Comment("member_id")
-    private Long memberId;
+    private String memberId;
 
     @Comment("board_id")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
 
-    public BoardLike(Long userId,Board board ) {
+    public BoardLike(String userId, Board board ) {
       this.memberId = userId;
       this.board = board;
     }

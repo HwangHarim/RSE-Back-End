@@ -1,9 +1,9 @@
-package com.game.core.File.controller;
+package com.game.core.file.controller;
 
-import com.game.core.common.dto.ResponseDto;
-import com.game.core.File.application.FileService;
-import com.game.core.common.util.Handler.ResponseHandler;
-import com.game.core.common.dto.ResponseMessage;
+import com.game.core.common.dto.Response.ResponseDto;
+import com.game.core.file.application.FileService;
+import com.game.core.common.dto.Response.Handler.ResponseHandler;
+import com.game.core.common.dto.Response.ResponseMessage;
 import io.swagger.annotations.Api;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

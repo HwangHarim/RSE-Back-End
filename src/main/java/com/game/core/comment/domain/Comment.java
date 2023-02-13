@@ -1,7 +1,7 @@
 package com.game.core.comment.domain;
 
-import com.game.core.board.domain.Board;
 import com.game.core.board.domain.vo.LikeTag;
+import com.game.core.board.domain.Board;
 import com.game.core.common.domain.BaseTime;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

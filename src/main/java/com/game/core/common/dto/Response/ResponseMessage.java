@@ -1,4 +1,4 @@
-package com.game.core.common.dto;
+package com.game.core.common.dto.Response;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

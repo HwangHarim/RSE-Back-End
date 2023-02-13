@@ -1,8 +1,8 @@
-package com.game.core.File.application;
+package com.game.core.file.application;
 
-import com.game.core.File.domain.Photo;
-import com.game.core.File.handler.FileHandler;
-import com.game.core.File.infrastructure.FileRepository;
+import com.game.core.file.domain.Photo;
+import com.game.core.file.handler.FileHandler;
+import com.game.core.file.infrastructure.FileRepository;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

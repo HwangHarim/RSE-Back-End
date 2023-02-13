@@ -1,4 +1,4 @@
-package com.game.core.File.domain;
+package com.game.core.file.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.game.core.board.domain.Board;
