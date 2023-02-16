@@ -1,15 +1,13 @@
 package com.game.core.board.controller;
 
 import com.game.core.board.application.BoardService;
-import com.game.core.board.dto.request.CreateBoardRequest;
-import com.game.core.board.dto.request.UpdateBoardRequest;
-import com.game.core.board.dto.response.ReadBoardResponse;
+import com.game.core.board.dto.request.board.CreateBoardRequest;
+import com.game.core.board.dto.request.board.UpdateBoardRequest;
+import com.game.core.board.dto.response.board.ReadBoardResponse;
 import com.game.core.common.dto.Response.Handler.ResponseHandler;
 import com.game.core.common.dto.Response.ResponseDto;
 import com.game.core.common.dto.Response.ResponseMessage;
 import com.game.core.member.application.UserService;
-import com.game.core.member.dto.LoggedInMember;
-import com.game.core.member.infrastructure.annotation.AuthMember;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -20,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -30,25 +27,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@ApiResponses({
-    @ApiResponse(code = 200, message = "Success"),
-    @ApiResponse(code = 400, message = "Bad Request"),
-    @ApiResponse(code = 500, message = "Internal Server Error")
-})
-
 @Api("board")
 @RestController
-@RequestMapping("/api/v1/board")
+@RequestMapping("/api/v1/boards")
 @RequiredArgsConstructor
 public class BoardController {
 
     private final BoardService boardService;
-
-    private final UserService userService;
     private final ResponseHandler responseHandler;
 
     @ApiOperation("board 전체 검색")
-    @GetMapping(value = "/all", produces = "application/json")
+    @GetMapping(produces = "application/json")
     public ResponseEntity<ResponseDto> getAllBoards(
         @PageableDefault(sort ="id", direction= Direction.ASC)
         Pageable pageable){
@@ -91,7 +80,6 @@ public class BoardController {
     }
 
 
-
     @ApiOperation("board 삭제")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<ResponseDto> deleteBoard(@PathVariable("id") Long id) {
@@ -106,7 +94,7 @@ public class BoardController {
     * view 개수 추가 api
     * */
     @ApiOperation("board view 추가")
-    @GetMapping("/read/{id}")
+    @GetMapping("views/{id}")
     public ResponseEntity<ResponseDto> viewCount(@PathVariable Long id) {
         int views = boardService.updateView(id); // views ++
         return  responseHandler.toResponseEntity(
@@ -114,4 +102,4 @@ public class BoardController {
             views
         );
     }
-} 
+}

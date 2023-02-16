@@ -64,8 +64,7 @@ public class CommentService {
     return commentRequests;
     }
 
-
-        @Transactional
+    @Transactional
     public void deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
             .orElseThrow(()-> {

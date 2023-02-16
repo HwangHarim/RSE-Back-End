@@ -1,4 +1,4 @@
-package com.game.core.board.dto.response;
+package com.game.core.board.dto.response.boardLike;
 
 import java.time.LocalDateTime;
 import lombok.Builder;

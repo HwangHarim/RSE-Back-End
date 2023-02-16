@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Api("board")
 @RestController
-@RequestMapping("/api/v1/board")
+@RequestMapping("/api/v1/boards")
 @RequiredArgsConstructor
 public class BoardLikeController {
 
@@ -38,7 +38,7 @@ public class BoardLikeController {
     private final ResponseHandler responseHandler;
 
     @ApiOperation("board 즐겨 찾기")
-    @PostMapping(value = "/{id}/like")
+    @PostMapping(value = "/{id}/likes")
     public ResponseEntity<ResponseDto> updateLikeBoard(@PathVariable("id") Long id){
         boardLikeService.likeBoard(id, userService.getUserId());
         return responseHandler.toResponseEntity(
@@ -48,7 +48,7 @@ public class BoardLikeController {
     }
 
     @ApiOperation("board 즐겨 찾기 해제")
-    @DeleteMapping(value = "/{id}/unlike")
+    @DeleteMapping(value = "/{id}/unlikes")
     public ResponseEntity<ResponseDto> updateUnLikeBoard(@PathVariable("id") Long id){
         boardLikeService.unLikeBoard(id, userService.getUserId());
         return responseHandler.toResponseEntity(
@@ -58,7 +58,7 @@ public class BoardLikeController {
     }
 
     @ApiOperation("모든 board 즐겨 찾기")
-    @GetMapping(value = "/all_like_board")
+    @GetMapping(value = "/likes")
     public ResponseEntity<ResponseDto> allLikeBoard(){
        List<Board> allLikeBoards =new ArrayList<>(boardLikeService.likeBoards(userService.getUserId()));
         return responseHandler.toResponseEntity(

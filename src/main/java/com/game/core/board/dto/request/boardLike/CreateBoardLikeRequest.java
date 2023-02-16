@@ -1,4 +1,4 @@
-package com.game.core.board.dto.request;
+package com.game.core.board.dto.request.boardLike;
 
 import com.game.core.board.domain.Board;
 import lombok.Builder;

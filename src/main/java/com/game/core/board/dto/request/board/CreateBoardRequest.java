@@ -1,5 +1,6 @@
-package com.game.core.board.dto.request;
+package com.game.core.board.dto.request.board;
 
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateBoardRequest {
+public class CreateBoardRequest {
     private String title;
     private String content;
+    private String type;
 }

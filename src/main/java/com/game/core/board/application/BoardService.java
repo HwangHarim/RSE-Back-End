@@ -2,13 +2,12 @@ package com.game.core.board.application;
 
 import com.game.core.board.domain.Board;
 import com.game.core.board.domain.vo.Type;
-import com.game.core.board.dto.response.ReadBoardResponse;
+import com.game.core.board.dto.response.board.ReadBoardResponse;
 import com.game.core.board.infrastructure.BoardRepository;
-import com.game.core.board.dto.request.CreateBoardRequest;
-import com.game.core.board.dto.request.UpdateBoardRequest;
+import com.game.core.board.dto.request.board.CreateBoardRequest;
+import com.game.core.board.dto.request.board.UpdateBoardRequest;
 import com.game.core.error.dto.ErrorMessage;
 import com.game.core.error.exception.NullPointerException;
-import com.game.core.member.dto.LoggedInMember;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -74,8 +73,6 @@ public class BoardService {
             .modified(board.get().getModifiedDate())
             .build();
     }
-
-
 
     public void changeTag(Long id, String tag){
         Board board = boardRepository.findById(id)
