@@ -1,8 +1,8 @@
 package com.game.core.file.application;
 
 import com.game.core.file.domain.Photo;
-import com.game.core.file.handler.FileHandler;
-import com.game.core.file.infrastructure.FileRepository;
+import com.game.core.file.handler.PhotoHandler;
+import com.game.core.file.infrastructure.PhotoRepository;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-public class FileService {
+public class PhotoService {
 
-    private final FileHandler fileHandler;
-    private final FileRepository fileRepository;
+    private final PhotoHandler fileHandler;
+    private final PhotoRepository fileRepository;
 
     @Transactional
     public void save(List<MultipartFile> files) throws Exception{

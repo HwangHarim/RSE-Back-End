@@ -13,7 +13,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
-public class FileHandler {
+public class PhotoHandler {
     public List<Photo> parseFileInfo(List<MultipartFile> multipartFiles) throws Exception {
         List<Photo> fileList = new ArrayList<>();
         if (multipartFiles.isEmpty())
