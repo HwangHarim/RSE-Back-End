@@ -60,15 +60,17 @@ public class BoardService {
         );
         boardRepository.save(board);
     }
-
+   @Transactional
     public ReadBoardResponse findBoard(Long id) {
         Optional<Board> board = boardRepository.findById(id);
+        boardRepository.updateView(id);
         return ReadBoardResponse.builder()
             .id(board.get().getId())
             .title(board.get().getTitle())
             .userName(board.get().getUserName())
             .content(board.get().getContent())
             .type(board.get().getType().name())
+            .view(board.get().getView())
             .createTime(board.get().getCreatedDate())
             .modified(board.get().getModifiedDate())
             .build();

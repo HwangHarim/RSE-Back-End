@@ -5,7 +5,8 @@ import com.game.core.board.domain.Board;
 import com.game.core.common.dto.Response.Handler.ResponseHandler;
 import com.game.core.common.dto.Response.ResponseDto;
 import com.game.core.common.dto.Response.ResponseMessage;
-import com.game.core.member.application.UserService;
+import com.game.core.member.dto.LoggedInMember;
+import com.game.core.member.infrastructure.annotation.AuthMember;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -21,12 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@ApiResponses({
-    @ApiResponse(code = 200, message = "Success"),
-    @ApiResponse(code = 400, message = "Bad Request"),
-    @ApiResponse(code = 500, message = "Internal Server Error")
-})
-
 @Api("board")
 @RestController
 @RequestMapping("/api/v1/boards")
@@ -34,13 +29,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class BoardLikeController {
 
     private final BoardLikeService boardLikeService;
-    private final UserService userService;
     private final ResponseHandler responseHandler;
 
     @ApiOperation("board 즐겨 찾기")
     @PostMapping(value = "/{id}/likes")
-    public ResponseEntity<ResponseDto> updateLikeBoard(@PathVariable("id") Long id){
-        boardLikeService.likeBoard(id, userService.getUserId());
+    public ResponseEntity<ResponseDto> updateLikeBoard(@AuthMember LoggedInMember loggedInMember, @PathVariable("id") Long id){
+        boardLikeService.likeBoard(id, loggedInMember.getId());
         return responseHandler.toResponseEntity(
             ResponseMessage.UPDATE_BOARD_SUCCESS,
             "like board"
@@ -49,8 +43,8 @@ public class BoardLikeController {
 
     @ApiOperation("board 즐겨 찾기 해제")
     @DeleteMapping(value = "/{id}/unlikes")
-    public ResponseEntity<ResponseDto> updateUnLikeBoard(@PathVariable("id") Long id){
-        boardLikeService.unLikeBoard(id, userService.getUserId());
+    public ResponseEntity<ResponseDto> updateUnLikeBoard(@AuthMember LoggedInMember loggedInMember,@PathVariable("id") Long id){
+        boardLikeService.unLikeBoard(id, loggedInMember.getId());
         return responseHandler.toResponseEntity(
             ResponseMessage.UPDATE_BOARD_SUCCESS,
             "unLike board"
@@ -59,8 +53,8 @@ public class BoardLikeController {
 
     @ApiOperation("모든 board 즐겨 찾기")
     @GetMapping(value = "/likes")
-    public ResponseEntity<ResponseDto> allLikeBoard(){
-       List<Board> allLikeBoards =new ArrayList<>(boardLikeService.likeBoards(userService.getUserId()));
+    public ResponseEntity<ResponseDto> allLikeBoard(@AuthMember LoggedInMember loggedInMember){
+       List<Board> allLikeBoards =new ArrayList<>(boardLikeService.likeBoards(loggedInMember.getId()));
         return responseHandler.toResponseEntity(
             ResponseMessage.UPDATE_BOARD_SUCCESS,
             allLikeBoards

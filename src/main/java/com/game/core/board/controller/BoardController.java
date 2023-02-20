@@ -7,11 +7,10 @@ import com.game.core.board.dto.response.board.ReadBoardResponse;
 import com.game.core.common.dto.Response.Handler.ResponseHandler;
 import com.game.core.common.dto.Response.ResponseDto;
 import com.game.core.common.dto.Response.ResponseMessage;
-import com.game.core.member.application.UserService;
+import com.game.core.member.dto.LoggedInMember;
+import com.game.core.member.infrastructure.annotation.AuthMember;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,8 +49,8 @@ public class BoardController {
 
     @ApiOperation("board 생성")
     @PostMapping
-    public ResponseEntity<ResponseDto> postBoard(@RequestBody CreateBoardRequest createBoardRequest){
-        boardService.createBoard(createBoardRequest, "하림");
+    public ResponseEntity<ResponseDto> postBoard(@AuthMember LoggedInMember loggedInMember, @RequestBody CreateBoardRequest createBoardRequest){
+        boardService.createBoard(createBoardRequest, loggedInMember.getId());
         return responseHandler.toResponseEntity(
             ResponseMessage.CREATE_BOARD_SUCCESS,
             "board 생성이 완료 되었습니다."
@@ -88,18 +87,5 @@ public class BoardController {
           ResponseMessage.DELETE_BOARD_SUCCESS,
           "board 삭제 완료 되었습니다."
       );
-    }
-
-    /*
-    * view 개수 추가 api
-    * */
-    @ApiOperation("board view 추가")
-    @GetMapping("views/{id}")
-    public ResponseEntity<ResponseDto> viewCount(@PathVariable Long id) {
-        int views = boardService.updateView(id); // views ++
-        return  responseHandler.toResponseEntity(
-            ResponseMessage.UPDATE_BOARD_VIEW_SUCCESS,
-            views
-        );
     }
 }

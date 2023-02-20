@@ -14,5 +14,5 @@ public class ReadBoardResponse {
     private String type;
     private LocalDateTime createTime;
     private LocalDateTime modified;
-    private Long views;
+    private Long view;
 }
