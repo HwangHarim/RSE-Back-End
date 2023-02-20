@@ -3,16 +3,15 @@ package com.game.core.config.security;
 import com.game.core.common.properties.AppProperties;
 import com.game.core.common.properties.CorsProperties;
 import com.game.core.member.infrastructure.UserRefreshTokenRepository;
+import com.game.core.oauth.application.CustomOAuth2UserService;
+import com.game.core.oauth.application.CustomUserDetailsService;
 import com.game.core.oauth.domain.RoleType;
 import com.game.core.oauth.exception.RestAuthenticationEntryPoint;
-import com.game.core.oauth.filter.DefaultAuthenticationStrategy;
 import com.game.core.oauth.filter.TokenAuthenticationFilter;
 import com.game.core.oauth.handler.OAuth2AuthenticationFailureHandler;
 import com.game.core.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import com.game.core.oauth.handler.TokenAccessDeniedHandler;
 import com.game.core.oauth.infrastructure.OAuth2AuthorizationRequestBasedOnCookieRepository;
-import com.game.core.oauth.application.CustomOAuth2UserService;
-import com.game.core.oauth.application.CustomUserDetailsService;
 import com.game.core.oauth.token.AuthTokenProvider;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
@@ -58,8 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring()
             .antMatchers("/h2-console/**", "/favicon.ico")
-            .antMatchers("/v2/api-docs", "/swagger-resources/**","/swagger", "/swagger-ui.html", "/webjars/**", "/swagger/**");
-//                .antMatchers("/resources/**")
+            .antMatchers("/v2/api-docs", "/swagger-resources/**","/swagger", "/swagger-ui.html", "/webjars/**", "/swagger/**")
+            .antMatchers("/resources/**");
 //                .antMatchers("/css/**")
 //                .antMatchers("/vendor/**")
 //                .antMatchers("/js/**")
@@ -86,7 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
             .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
-            .anyRequest().permitAll()
+            .anyRequest().authenticated()
             .and()
             .oauth2Login()
             .authorizationEndpoint()

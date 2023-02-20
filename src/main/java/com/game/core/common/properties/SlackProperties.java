@@ -1,11 +1,11 @@
 package com.game.core.common.properties;
 
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@Getter
+@Data
 @ConfigurationProperties(prefix = "slack")
-public class SlackProperties {
-    String token;
-    String channel;
+public class SlackProperties{
+    private String token;
+    private String channel;
 }
