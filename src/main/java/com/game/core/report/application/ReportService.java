@@ -16,22 +16,16 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReportService {
 
-    String token;
-    String challenge;
-
-
+    private final SlackProperties slackProperties;
 
     public void postSlackMessage(CreateReportRequest createReportRequest){
         try{
-            MethodsClient methods = Slack.getInstance().methods(token);
+            MethodsClient methods = Slack.getInstance().methods(slackProperties.getToken());
             ChatPostMessageRequest request = ChatPostMessageRequest.builder()
-                .channel(challenge)
+                .channel(slackProperties.getChannel())
                 .text(reportContent(createReportRequest))
                 .build();
-
             methods.chatPostMessage(request);
-
-            log.info("보냄");
         } catch (SlackApiException | IOException e) {
             log.error(e.getMessage());
         }
