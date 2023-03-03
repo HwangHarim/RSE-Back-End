@@ -1,9 +1,10 @@
 package com.game.core.member.application;
 
 import com.game.core.member.domain.User;
+import com.game.core.member.dto.LoggedInMember;
+import com.game.core.member.dto.request.UpdateUserName;
 import com.game.core.member.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,17 +12,18 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-    public User getUser(String userId) {
-        return userRepository.findByUserId(userId);
+
+    public void updateUserName(String userId, UpdateUserName updateUserName){
+        User user = userRepository.findByUserId(userId);
+        if(userRepository.findByUsername(updateUserName.getUserName()) == null){
+            user.updateUsername(updateUserName.getUserName());
+            userRepository.save(user);
+        }else if(userRepository.findByUsername(updateUserName.getUserName()) != null){
+            throw new RuntimeException("중복되는 이름 입니다.");
+        }
     }
 
-    public org.springframework.security.core.userdetails.User getPrincipal() {
-
-        return (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
-
-    public String getUserId(){
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return principal.getUsername();
+    public LoggedInMember viewUser(String userId){
+        return LoggedInMember.from(userRepository.findByUserId(userId));
     }
 }

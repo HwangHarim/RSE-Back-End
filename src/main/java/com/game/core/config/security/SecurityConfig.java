@@ -58,7 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring()
             .antMatchers("/h2-console/**", "/favicon.ico")
             .antMatchers("/v2/api-docs", "/swagger-resources/**","/swagger", "/swagger-ui.html", "/webjars/**", "/swagger/**")
-            .antMatchers("/resources/**");
+            .antMatchers("/resources/**")
+            .antMatchers("/api/v1/auth/refresh");
 //                .antMatchers("/css/**")
 //                .antMatchers("/vendor/**")
 //                .antMatchers("/js/**")
@@ -73,6 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
             .and()
             .csrf().disable()
             .formLogin().disable()
@@ -80,23 +82,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .exceptionHandling()
             .authenticationEntryPoint(new RestAuthenticationEntryPoint())
             .accessDeniedHandler(tokenAccessDeniedHandler)
+
             .and()
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .antMatchers("/api/**").hasAnyAuthority(RoleType.USER.getCode())
             .antMatchers("/api/**/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
             .anyRequest().authenticated()
+
             .and()
             .oauth2Login()
             .authorizationEndpoint()
             .baseUri("/oauth2/authorization")
             .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+
             .and()
             .redirectionEndpoint()
             .baseUri("/*/oauth2/code/*")
+
             .and()
             .userInfoEndpoint()
             .userService(oAuth2UserService)
+
             .and()
             .successHandler(oAuth2AuthenticationSuccessHandler())
             .failureHandler(oAuth2AuthenticationFailureHandler());

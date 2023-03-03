@@ -10,20 +10,23 @@ import lombok.Getter;
 public class LoggedInMember {
     private String id;
     private String email;
+    private String profileUrl;
 
     protected LoggedInMember() {
     }
 
     @Builder
-    protected LoggedInMember(String id, String email) {
+    protected LoggedInMember(String id, String email, String profileUrl) {
         this.id = id;
         this.email = email;
+        this.profileUrl = profileUrl;
     }
 
     public static LoggedInMember from(User member) {
         return LoggedInMember.builder()
             .id(member.getUserId())
             .email(member.getEmail())
+            .profileUrl(member.getProfileImageUrl())
             .build();
     }
 }

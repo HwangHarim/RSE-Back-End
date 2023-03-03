@@ -37,8 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(authMemberArgumentResolver);
-        WebMvcConfigurer.super.addArgumentResolvers(resolvers);
+         resolvers.add(authMemberArgumentResolver);
     }
 
     /*

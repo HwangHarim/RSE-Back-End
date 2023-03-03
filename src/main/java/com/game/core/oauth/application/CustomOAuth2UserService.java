@@ -69,9 +69,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 "Y",
                 userInfo.getImageUrl(),
                 providerType,
-                RoleType.USER,
-                now,
-                now
+                RoleType.USER
         );
 
         return userRepository.saveAndFlush(user);
