@@ -57,7 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring()
             .antMatchers("/h2-console/**", "/favicon.ico")
-            .antMatchers("/v2/api-docs", "/swagger-resources/**","/swagger", "/swagger-ui.html", "/webjars/**", "/swagger/**")
+            .antMatchers("/v2/api-docs", "/swagger-resources/**", "/webjars/**")
+            .antMatchers("/swagger")
+            .antMatchers("/swagger-ui/**")
             .antMatchers("/resources/**")
             .antMatchers("/api/v1/auth/refresh");
 //                .antMatchers("/css/**")

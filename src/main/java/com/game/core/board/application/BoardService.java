@@ -63,7 +63,6 @@ public class BoardService {
    @Transactional
     public ReadBoardResponse findBoard(Long id) {
         Optional<Board> board = boardRepository.findById(id);
-        boardRepository.updateView(id);
         return ReadBoardResponse.builder()
             .id(board.get().getId())
             .title(board.get().getTitle())
