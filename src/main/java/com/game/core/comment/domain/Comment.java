@@ -23,7 +23,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "comment")
+@Table(name = "review")
 public class Comment extends BaseTime {
 
     @Id

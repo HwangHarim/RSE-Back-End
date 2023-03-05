@@ -54,13 +54,6 @@ public class Board extends BaseTime {
     @OneToMany(mappedBy = "board")
     private List<Photo> photos = new ArrayList<>();
 
-    public void addFile(Photo file) {
-        this.photos.add(file);
-
-        if (file.getBoard() != this)
-            file.setBoard(this);
-    }
-
     public void addComment(Comment comment) {
         this.comments.add(comment);
 

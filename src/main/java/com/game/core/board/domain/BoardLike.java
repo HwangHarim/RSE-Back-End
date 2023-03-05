@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import org.hibernate.annotations.Comment;
 
 @Entity
 @Getter
+@Table(name = "favorites_board")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor
 public class BoardLike extends BaseTime {
@@ -26,7 +28,7 @@ public class BoardLike extends BaseTime {
     @Comment("member_id")
     private String memberId;
 
-    @Comment("board_id")
+    @Comment("board")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
