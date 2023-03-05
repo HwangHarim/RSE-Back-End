@@ -19,6 +19,10 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
+application-h2.yml
+application-oauth.yml
+application-slack.yml
+
 .idea
 *.iws
 *.iml
@@ -36,8 +40,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### ynl ###
-application-oauth.yml
-application-h2.yml
-application-slack.yml
