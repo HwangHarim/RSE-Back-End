@@ -2,6 +2,7 @@ package com.game.core.board.controller;
 
 import com.game.core.board.application.BoardLikeService;
 import com.game.core.board.domain.Board;
+import com.game.core.board.dto.response.boardLike.ReadBoardLikeResponse;
 import com.game.core.common.dto.Response.Handler.ResponseHandler;
 import com.game.core.common.dto.Response.ResponseDto;
 import com.game.core.common.dto.Response.ResponseMessage;
@@ -13,6 +14,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,9 +56,9 @@ public class BoardLikeController {
     @ApiOperation("모든 board 즐겨 찾기")
     @GetMapping(value = "/likes")
     public ResponseEntity<ResponseDto> allLikeBoard(@AuthMember LoggedInMember loggedInMember){
-       List<Board> allLikeBoards =new ArrayList<>(boardLikeService.likeBoards(loggedInMember.getId()));
+       Stream<ReadBoardLikeResponse> allLikeBoards = boardLikeService.likeBoards(loggedInMember.getId());
         return responseHandler.toResponseEntity(
-            ResponseMessage.UPDATE_BOARD_SUCCESS,
+            ResponseMessage.CREATE_BOARD_SUCCESS,
             allLikeBoards
         );
     }
