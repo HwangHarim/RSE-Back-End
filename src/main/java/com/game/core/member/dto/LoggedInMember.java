@@ -12,14 +12,17 @@ public class LoggedInMember {
     private String email;
     private String profileUrl;
 
+    private String userName;
+
     protected LoggedInMember() {
     }
 
     @Builder
-    protected LoggedInMember(String id, String email, String profileUrl) {
+    protected LoggedInMember(String id, String email, String profileUrl,String userName) {
         this.id = id;
         this.email = email;
         this.profileUrl = profileUrl;
+        this.userName = userName;
     }
 
     public static LoggedInMember from(User member) {
@@ -27,6 +30,7 @@ public class LoggedInMember {
             .id(member.getUserId())
             .email(member.getEmail())
             .profileUrl(member.getProfileImageUrl())
+            .userName(member.getUsername())
             .build();
     }
 }
