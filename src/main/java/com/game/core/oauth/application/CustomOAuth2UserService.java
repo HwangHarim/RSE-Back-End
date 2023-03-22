@@ -1,15 +1,15 @@
 package com.game.core.oauth.application;
 
 
+import com.game.core.error.dto.ErrorMessage;
 import com.game.core.member.domain.User;
 import com.game.core.member.infrastructure.UserRepository;
 import com.game.core.oauth.domain.ProviderType;
 import com.game.core.oauth.domain.RoleType;
 import com.game.core.oauth.domain.UserPrincipal;
-import com.game.core.oauth.exception.OAuthProviderMissMatchException;
+import com.game.core.error.exception.oauth.OAuthProviderMissMatchException;
 import com.game.core.oauth.info.OAuth2UserInfo;
 import com.game.core.oauth.info.OAuth2UserInfoFactory;
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -47,10 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if (savedUser != null) {
             if (providerType != savedUser.getProviderType()) {
-                throw new OAuthProviderMissMatchException(
-                        "Looks like you're signed up with " + providerType +
-                        " account. Please use your " + savedUser.getProviderType() + " account to login."
-                );
+                throw new OAuthProviderMissMatchException(ErrorMessage.OAuth_Provider_Miss_Match);
             }
             updateUser(savedUser, userInfo);
         } else {
@@ -61,7 +58,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
-        LocalDateTime now = LocalDateTime.now();
         User user = new User(
                 userInfo.getId(),
                 userInfo.getName(),

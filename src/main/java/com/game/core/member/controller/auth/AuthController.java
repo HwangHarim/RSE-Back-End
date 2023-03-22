@@ -1,9 +1,15 @@
 package com.game.core.member.controller.auth;
 
-import com.game.core.common.ApiResponse.ApiResponse;
 import com.game.core.common.properties.AppProperties;
+import com.game.core.common.response.dto.ResponseDto;
+import com.game.core.common.response.dto.ResponseMessage;
+import com.game.core.common.response.handler.ResponseHandler;
 import com.game.core.config.util.CookieUtil;
 import com.game.core.config.util.HeaderUtil;
+import com.game.core.error.dto.ErrorMessage;
+import com.game.core.error.exception.token.InvalidAccessTokenException;
+import com.game.core.error.exception.token.InvalidRefreshTokenException;
+import com.game.core.error.exception.token.NotExpiredTokenException;
 import com.game.core.member.domain.UserRefreshToken;
 import com.game.core.member.dto.AuthReqModel;
 import com.game.core.member.infrastructure.UserRefreshTokenRepository;
@@ -17,7 +23,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +31,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,11 +44,13 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
 
+    private final ResponseHandler responseHandler;
+
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
 
     @PostMapping("/login")
-    public ApiResponse login(
+    public ResponseEntity<ResponseDto> login(
             HttpServletRequest request,
             HttpServletResponse response,
             @RequestBody AuthReqModel authReqModel
@@ -86,22 +93,22 @@ public class AuthController {
         CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
         CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
-        return ApiResponse.success("token", accessToken.getToken());
+        return responseHandler.toResponseEntity(ResponseMessage.CREATE_TOKEN_SUCCESS, accessToken.getToken());
     }
 
     @GetMapping("/refresh")
-    public ApiResponse refreshToken (HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<ResponseDto> refreshToken (HttpServletRequest request, HttpServletResponse response) {
         // access token 확인
         String accessToken = HeaderUtil.getAccessToken(request);
         AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
         if (authToken.validate()) {
-            return ApiResponse.invalidAccessToken();
+           throw new InvalidAccessTokenException(ErrorMessage.INVALID_ACCESS_TOKEN);
         }
-
+        //invalidAccessToken
         // expired access token 인지 확인
         Claims claims = authToken.getExpiredTokenClaims();
         if (claims == null) {
-            return ApiResponse.notExpiredTokenYet();
+            throw new NotExpiredTokenException(ErrorMessage.NOT_EXPIRED_TOKEN_YET);
         }
 
         String userId = claims.getSubject();
@@ -114,13 +121,13 @@ public class AuthController {
         AuthToken authRefreshToken = tokenProvider.convertAuthToken(refreshToken);
 
         if (!authRefreshToken.validate()) {
-            return ApiResponse.invalidRefreshToken();
+            throw new InvalidRefreshTokenException(ErrorMessage.INVALID_REFRESH_TOKEN);
         }
 
         // userId refresh token 으로 DB 확인
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId, refreshToken);
         if (userRefreshToken == null) {
-            return ApiResponse.invalidRefreshToken();
+            throw new InvalidRefreshTokenException(ErrorMessage.INVALID_REFRESH_TOKEN);
         }
 
         Date now = new Date();
@@ -150,6 +157,6 @@ public class AuthController {
             CookieUtil.addCookie(response, REFRESH_TOKEN, authRefreshToken.getToken(), cookieMaxAge);
         }
 
-        return ApiResponse.success("token", newAccessToken.getToken());
+        return responseHandler.toResponseEntity(ResponseMessage.CREATE_TOKEN_SUCCESS, newAccessToken.getToken());
     }
 }

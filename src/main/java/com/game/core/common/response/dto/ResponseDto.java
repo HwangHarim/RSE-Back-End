@@ -1,4 +1,4 @@
-package com.game.core.common.dto.Response;
+package com.game.core.common.response.dto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

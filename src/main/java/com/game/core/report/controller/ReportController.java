@@ -1,8 +1,8 @@
 package com.game.core.report.controller;
 
-import com.game.core.common.dto.Response.Handler.ResponseHandler;
-import com.game.core.common.dto.Response.ResponseDto;
-import com.game.core.common.dto.Response.ResponseMessage;
+import com.game.core.common.response.handler.ResponseHandler;
+import com.game.core.common.response.dto.ResponseDto;
+import com.game.core.common.response.dto.ResponseMessage;
 import com.game.core.report.application.ReportService;
 import com.game.core.report.dto.request.CreateReportRequest;
 import lombok.RequiredArgsConstructor;

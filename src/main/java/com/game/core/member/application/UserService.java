@@ -1,5 +1,7 @@
 package com.game.core.member.application;
 
+import com.game.core.error.dto.ErrorMessage;
+import com.game.core.error.exception.member.DuplicateUserException;
 import com.game.core.member.domain.User;
 import com.game.core.member.dto.LoggedInMember;
 import com.game.core.member.dto.request.UpdateUserName;
@@ -19,7 +21,7 @@ public class UserService {
             user.updateUsername(updateUserName.getUserName());
             userRepository.save(user);
         }else if(userRepository.findByUsername(updateUserName.getUserName()) != null){
-            throw new RuntimeException("중복되는 이름 입니다.");
+            throw new DuplicateUserException(ErrorMessage.DUPLICATE_NAME);
         }
     }
 

@@ -1,7 +1,7 @@
-package com.game.core.common.dto.Response.Handler;
+package com.game.core.common.response.handler;
 
-import com.game.core.common.dto.Response.ResponseMessage;
-import com.game.core.common.dto.Response.ResponseDto;
+import com.game.core.common.response.dto.ResponseDto;
+import com.game.core.common.response.dto.ResponseMessage;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 

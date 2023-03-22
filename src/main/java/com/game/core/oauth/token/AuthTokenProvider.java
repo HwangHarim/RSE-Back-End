@@ -1,6 +1,7 @@
 package com.game.core.oauth.token;
 
-import com.game.core.oauth.exception.TokenValidFailedException;
+import com.game.core.error.dto.ErrorMessage;
+import com.game.core.error.exception.token.TokenValidFailedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
@@ -52,7 +53,7 @@ public class AuthTokenProvider {
 
             return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
         } else {
-            throw new TokenValidFailedException();
+            throw new TokenValidFailedException(ErrorMessage.NOT_GENERATE_TOKEN);
         }
     }
 
