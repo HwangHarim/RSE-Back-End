@@ -12,6 +12,12 @@ public enum ErrorMessage {
     NOT_FIND_ID_USER(HttpStatus.BAD_REQUEST, "요한한 사용자가 존재하지 않습니다."),
 
     /*
+     * 이미지 관련 오류
+     **/
+    INVALID_BOARD_PHOTO_IMAGE(HttpStatus.BAD_REQUEST, "유효하지 않은 이미지 입니다."),
+    FAILURE_FILE_CONVERT(HttpStatus.BAD_REQUEST,"컨버트 실패"),
+
+    /*
      * 토큰 관련 오류
      **/
     NOT_GENERATE_TOKEN(HttpStatus.BAD_REQUEST, "토큰 생성에 실패했습니다."),
