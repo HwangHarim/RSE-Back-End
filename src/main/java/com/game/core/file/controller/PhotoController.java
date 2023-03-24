@@ -1,15 +1,14 @@
 package com.game.core.file.controller;
 
-import com.game.core.common.dto.Response.ResponseDto;
+import com.game.core.common.response.dto.ResponseDto;
 import com.game.core.file.application.PhotoService;
-import com.game.core.common.dto.Response.Handler.ResponseHandler;
-import com.game.core.common.dto.Response.ResponseMessage;
+import com.game.core.common.response.handler.ResponseHandler;
+import com.game.core.common.response.dto.ResponseMessage;
 import io.swagger.annotations.Api;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
