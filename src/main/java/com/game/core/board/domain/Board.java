@@ -1,12 +1,14 @@
 package com.game.core.board.domain;
 
+import com.game.core.board.domain.vo.BoardPhotos;
 import com.game.core.board.domain.vo.Type;
+import com.game.core.board_photo.domain.BoardPhoto;
 import com.game.core.comment.domain.Comment;
 import com.game.core.common.domain.BaseTime;
-import com.game.core.file.domain.Photo;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -51,8 +53,8 @@ public class Board extends BaseTime {
     @OneToMany(mappedBy = "board")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board")
-    private List<Photo> photos = new ArrayList<>();
+    @Embedded
+    private BoardPhotos boardPhotos;
 
     public void addComment(Comment comment) {
         this.comments.add(comment);
@@ -65,12 +67,30 @@ public class Board extends BaseTime {
       this.userName = userName;
     }
 
-    public void update(String title, String content){
+    public void update(String title, String content, List<BoardPhoto> boardPhotos){
         this.title = title;
         this.content = content;
+        this.boardPhotos.removeAll();
+        addBoardPhotos(boardPhotos);
     }
 
     public void changeTage(Type type){
         this.type = type;
+    }
+
+    public String getBoardPhotoValue(){
+        return boardPhotos.getBoardPhotoUrl();
+    }
+
+    public List<BoardPhoto> getBoardPhoto(){
+        return boardPhotos.getBoardPhotos();
+    }
+
+    public void addBoardPhotos(List<BoardPhoto> photos){
+        photos.forEach(this::addBoardPhoto);
+    }
+    public void addBoardPhoto(BoardPhoto boardPhoto){
+        boardPhotos.add(boardPhoto);
+        boardPhoto.register(this);
     }
 }
