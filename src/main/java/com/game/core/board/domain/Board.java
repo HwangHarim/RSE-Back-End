@@ -1,13 +1,11 @@
 package com.game.core.board.domain;
 
-import com.game.core.board.domain.vo.BoardPhotos;
 import com.game.core.board.domain.vo.Type;
 import com.game.core.comment.domain.Comment;
 import com.game.core.common.domain.BaseTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -55,9 +53,6 @@ public class Board extends BaseTime {
 
     @OneToMany(mappedBy = "board")
     private List<Comment> comments = new ArrayList<>();
-
-    @Embedded
-    private BoardPhotos boardPhotos;
 
     public void addComment(Comment comment) {
         this.comments.add(comment);
