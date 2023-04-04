@@ -4,3 +4,4 @@ spring:
       - oauth
       - h2
       - slack
+      - s3

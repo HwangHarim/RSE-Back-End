@@ -22,6 +22,8 @@ bin/
 application-h2.yml
 application-oauth.yml
 application-slack.yml
+application-s3.yml
+
 
 .idea
 *.iws
