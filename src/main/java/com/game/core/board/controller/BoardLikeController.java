@@ -1,19 +1,14 @@
 package com.game.core.board.controller;
 
 import com.game.core.board.application.BoardLikeService;
-import com.game.core.board.domain.Board;
 import com.game.core.board.dto.response.boardLike.ReadBoardLikeResponse;
-import com.game.core.common.dto.Response.Handler.ResponseHandler;
-import com.game.core.common.dto.Response.ResponseDto;
-import com.game.core.common.dto.Response.ResponseMessage;
+import com.game.core.common.response.handler.ResponseHandler;
+import com.game.core.common.response.dto.ResponseDto;
+import com.game.core.common.response.dto.ResponseMessage;
 import com.game.core.member.dto.LoggedInMember;
 import com.game.core.member.infrastructure.annotation.AuthMember;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

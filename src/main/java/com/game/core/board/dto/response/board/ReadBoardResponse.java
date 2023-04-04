@@ -15,4 +15,5 @@ public class ReadBoardResponse {
     private LocalDateTime createTime;
     private LocalDateTime modified;
     private Long view;
+    private Long likeCount;
 }
