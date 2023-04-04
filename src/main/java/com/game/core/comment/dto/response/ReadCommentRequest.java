@@ -7,7 +7,8 @@ import lombok.Data;
 @Data
 @Builder
 public class ReadCommentRequest {
+    Long id;
     Long boardId;
     String comment;
-    LikeTag likeTag;
+    Long likeView;
 }

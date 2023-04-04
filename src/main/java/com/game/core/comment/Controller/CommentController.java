@@ -4,9 +4,11 @@ import com.game.core.comment.application.CommentService;
 import com.game.core.comment.dto.request.CreateCommentRequest;
 import com.game.core.comment.dto.request.UpdateCommentRequest;
 import com.game.core.comment.dto.response.ReadCommentRequest;
-import com.game.core.common.dto.Response.Handler.ResponseHandler;
-import com.game.core.common.dto.Response.ResponseDto;
-import com.game.core.common.dto.Response.ResponseMessage;
+import com.game.core.common.response.handler.ResponseHandler;
+import com.game.core.common.response.dto.ResponseDto;
+import com.game.core.common.response.dto.ResponseMessage;
+import com.game.core.member.dto.LoggedInMember;
+import com.game.core.member.infrastructure.annotation.AuthMember;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -45,12 +47,37 @@ public class CommentController {
     // 댓글 작성
     @ApiOperation("comment 수정")
     @PatchMapping(value = "/{boardId}/comments/{id}")
-    public ResponseEntity<ResponseDto> updateComment(@PathVariable("id") Long id,
+    public ResponseEntity<ResponseDto> updateComment(@AuthMember LoggedInMember member,
+        @PathVariable("id") Long id,
         @RequestBody UpdateCommentRequest updateCommentRequest){
-        commentService.updateComment(id, updateCommentRequest);
+        commentService.updateComment(id, updateCommentRequest, member);
+        return responseHandler.toResponseEntity(
+            ResponseMessage.UPDATE_COMMENT_SUCCESS,
+            "comment 수정이 완료 되었습니다."
+        );
+    }
+
+    // 댓글 좋아요기능
+    @ApiOperation("comment like")
+    @PatchMapping(value = "/{boardId}/comments/{id}/like")
+    public ResponseEntity<ResponseDto> upLikeView(@AuthMember LoggedInMember member,
+        @PathVariable("id") Long id){
+        commentService.upLikeViews(id, member);
         return responseHandler.toResponseEntity(
             ResponseMessage.UPDATE_BOARD_SUCCESS,
-            "comment 수정이 완료 되었습니다."
+            "like View 를 성공했습니다."
+        );
+    }
+
+    // 댓글 좋아요 취소
+    @ApiOperation("comment unlike")
+    @PatchMapping(value = "/{boardId}/comments/{id}/unlike")
+    public ResponseEntity<ResponseDto> downLikeView(@AuthMember LoggedInMember member,
+        @PathVariable("id") Long id){
+        commentService.downLikeViews(id, member);
+        return responseHandler.toResponseEntity(
+            ResponseMessage.UPDATE_BOARD_SUCCESS,
+            "like View 를 취소했습니다 ."
         );
     }
 
@@ -65,11 +92,8 @@ public class CommentController {
     // 댓글 삭제
     @ApiOperation(value = "댓글 삭제", notes = "게시글에 달린 댓글을 삭제합니다.")
     @DeleteMapping("/{boardId}/comments/{id}")
-    public ResponseEntity<ResponseDto> deleteComment(@PathVariable("boardId")Long boardId,
-                                                     @PathVariable("id") Long commentId) {
-        // 추후 JWT 로그인 기능을 추가하고나서, 세션에 로그인된 유저와 댓글 작성자를 비교해서, 맞으면 삭제 진행하고
-        // 틀리다면 예외처리를 해주면 된다.
+    public ResponseEntity<ResponseDto> deleteComment(@PathVariable("id") Long commentId) {
         commentService.deleteComment(commentId);
-        return responseHandler.toResponseEntity(ResponseMessage.DELETE_BOARD_SUCCESS, "댓글 삭제 완료");
+        return responseHandler.toResponseEntity(ResponseMessage.DELETE_COMMENT_SUCCESS, "댓글 삭제 완료");
     }
 }

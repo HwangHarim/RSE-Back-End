@@ -27,6 +27,7 @@ public enum ResponseMessage {
 
     //comment
     CREATE_COMMENT_SUCCESS(HttpStatus.CREATED, "댓글 추가 성공"),
+    UPDATE_COMMENT_SUCCESS(HttpStatus.OK,"댓글 수정 성공"),
     READ_COMMENT_SUCCESS(HttpStatus.OK,"댓글 조회 성공"),
     DELETE_COMMENT_SUCCESS(HttpStatus.OK,"댓글 삭제 성공"),
 
