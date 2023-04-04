@@ -2,7 +2,6 @@ package com.game.core.board.domain;
 
 import com.game.core.board.domain.vo.BoardPhotos;
 import com.game.core.board.domain.vo.Type;
-import com.game.core.board_photo.domain.BoardPhoto;
 import com.game.core.comment.domain.Comment;
 import com.game.core.common.domain.BaseTime;
 import java.util.ArrayList;
@@ -50,6 +49,10 @@ public class Board extends BaseTime {
     @Column(columnDefinition = "Long default 0", nullable = false)
     private Long view;
 
+    @Column(columnDefinition = "Long default 0", nullable = false)
+    private Long likeCount;
+
+
     @OneToMany(mappedBy = "board")
     private List<Comment> comments = new ArrayList<>();
 
@@ -63,34 +66,29 @@ public class Board extends BaseTime {
             comment.setBoard(this);
     }
 
-    public void setUserName(String userName) {
-      this.userName = userName;
-    }
 
-    public void update(String title, String content, List<BoardPhoto> boardPhotos){
+    public void update(String title, String content){
         this.title = title;
         this.content = content;
-        this.boardPhotos.removeAll();
-        addBoardPhotos(boardPhotos);
+    }
+    public Long updateView(Long view){
+        this.view = view+1;
+        return this.view;
+    }
+    public Long updateUpLikeCount(Long likeCount){
+        this.likeCount = likeCount+1;
+        return this.likeCount;
+
+    }public Long updateDownLikeCount(Long likeCount){
+        this.likeCount = likeCount-1;
+        return this.likeCount;
+    }
+    public void setUserName(String userName) {
+      this.userName = userName;
     }
 
     public void changeTage(Type type){
         this.type = type;
     }
 
-    public String getBoardPhotoValue(){
-        return boardPhotos.getBoardPhotoUrl();
-    }
-
-    public List<BoardPhoto> getBoardPhoto(){
-        return boardPhotos.getBoardPhotos();
-    }
-
-    public void addBoardPhotos(List<BoardPhoto> photos){
-        photos.forEach(this::addBoardPhoto);
-    }
-    public void addBoardPhoto(BoardPhoto boardPhoto){
-        boardPhotos.add(boardPhoto);
-        boardPhoto.register(this);
-    }
 }

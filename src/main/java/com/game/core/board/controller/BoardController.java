@@ -1,12 +1,13 @@
 package com.game.core.board.controller;
 
 import com.game.core.board.application.BoardService;
+import com.game.core.board.domain.vo.Type;
 import com.game.core.board.dto.request.board.CreateBoardRequest;
 import com.game.core.board.dto.request.board.UpdateBoardRequest;
 import com.game.core.board.dto.response.board.ReadBoardResponse;
-import com.game.core.common.dto.Response.Handler.ResponseHandler;
-import com.game.core.common.dto.Response.ResponseDto;
-import com.game.core.common.dto.Response.ResponseMessage;
+import com.game.core.common.response.handler.ResponseHandler;
+import com.game.core.common.response.dto.ResponseDto;
+import com.game.core.common.response.dto.ResponseMessage;
 import com.game.core.member.dto.LoggedInMember;
 import com.game.core.member.infrastructure.annotation.AuthMember;
 import io.swagger.annotations.Api;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Api("board")
@@ -38,9 +40,25 @@ public class BoardController {
     @ApiOperation("board 전체 검색")
     @GetMapping(produces = "application/json")
     public ResponseEntity<ResponseDto> getAllBoards(
-        @PageableDefault(sort ="id", direction= Direction.ASC)
-        Pageable pageable){
-        Page<ReadBoardResponse> boards = boardService.getBoards(pageable);
+        @PageableDefault(sort ="id", size = 15,direction= Direction.ASC)
+        Pageable pageable,
+        @RequestParam(value = "type", required = false) String type,
+        @RequestParam(value = "title", required = false) String title){
+        if(type != null){
+            Page<ReadBoardResponse> boards = boardService.getTypeBoards(pageable, Type.getType(type));
+            return responseHandler.toResponseEntity(
+                ResponseMessage.READ_ALL_BOARD_SUCCESS,
+                boards
+            );
+        }
+        if(title != null){
+            Page<ReadBoardResponse> boards = boardService.getTitleBoards(pageable, title);
+            return responseHandler.toResponseEntity(
+                ResponseMessage.READ_ALL_BOARD_SUCCESS,
+                boards
+            );
+        }
+        Page<ReadBoardResponse> boards = boardService.getAllBoards(pageable);
         return responseHandler.toResponseEntity(
             ResponseMessage.READ_ALL_BOARD_SUCCESS,
             boards
@@ -61,7 +79,6 @@ public class BoardController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<ResponseDto> getBoard(@PathVariable("id") Long id){
        ReadBoardResponse board = boardService.findBoard(id);
-       boardService.updateView(id);
         return responseHandler.toResponseEntity(
             ResponseMessage.READ_BOARD_SUCCESS,
             board
