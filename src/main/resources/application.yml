@@ -2,6 +2,6 @@ spring:
   profiles:
     include:
       - oauth
-      - h2
+      - db
       - slack
       - s3

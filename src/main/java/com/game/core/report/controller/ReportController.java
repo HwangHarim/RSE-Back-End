@@ -3,6 +3,8 @@ package com.game.core.report.controller;
 import com.game.core.common.response.handler.ResponseHandler;
 import com.game.core.common.response.dto.ResponseDto;
 import com.game.core.common.response.dto.ResponseMessage;
+import com.game.core.member.dto.LoggedInMember;
+import com.game.core.member.infrastructure.annotation.AuthMember;
 import com.game.core.report.application.ReportService;
 import com.game.core.report.dto.request.CreateReportRequest;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +22,10 @@ public class ReportController {
     private final ResponseHandler responseHandler;
 
     @PostMapping
-    public ResponseEntity<ResponseDto> postReport(@RequestBody CreateReportRequest createReportRequest){
-        slackService.postSlackMessage(createReportRequest);
+    public ResponseEntity<ResponseDto> postReport(
+        @AuthMember LoggedInMember member,
+        @RequestBody CreateReportRequest createReportRequest){
+        slackService.postSlackMessage(createReportRequest, member);
         return responseHandler.toResponseEntity(
             ResponseMessage.CREATE_BOARD_SUCCESS,
             "신고가 완료 되었습니다.");
