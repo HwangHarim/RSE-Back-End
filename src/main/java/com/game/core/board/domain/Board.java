@@ -61,7 +61,6 @@ public class Board extends BaseTime {
             comment.setBoard(this);
     }
 
-
     public void update(String title, String content){
         this.title = title;
         this.content = content;
@@ -85,5 +84,4 @@ public class Board extends BaseTime {
     public void changeTage(Type type){
         this.type = type;
     }
-
 }

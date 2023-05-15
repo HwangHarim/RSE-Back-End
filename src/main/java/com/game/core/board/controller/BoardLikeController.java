@@ -30,8 +30,10 @@ public class BoardLikeController {
 
     @ApiOperation("board 즐겨 찾기")
     @PostMapping(value = "/{id}/likes")
-    public ResponseEntity<ResponseDto> updateLikeBoard(@AuthMember LoggedInMember loggedInMember, @PathVariable("id") Long id){
-        boardLikeService.likeBoard(id, loggedInMember.getId());
+    public ResponseEntity<ResponseDto> updateLikeBoard(
+        @AuthMember LoggedInMember loggedInMember,
+        @PathVariable("id") Long id){
+        boardLikeService.likeBoard(id, loggedInMember);
         return responseHandler.toResponseEntity(
             ResponseMessage.UPDATE_BOARD_SUCCESS,
             "like board"
@@ -40,8 +42,10 @@ public class BoardLikeController {
 
     @ApiOperation("board 즐겨 찾기 해제")
     @DeleteMapping(value = "/{id}/unlikes")
-    public ResponseEntity<ResponseDto> updateUnLikeBoard(@AuthMember LoggedInMember loggedInMember,@PathVariable("id") Long id){
-        boardLikeService.unLikeBoard(id, loggedInMember.getId());
+    public ResponseEntity<ResponseDto> updateUnLikeBoard(
+        @AuthMember LoggedInMember loggedInMember,
+        @PathVariable("id") Long id){
+        boardLikeService.unLikeBoard(id, loggedInMember);
         return responseHandler.toResponseEntity(
             ResponseMessage.UPDATE_BOARD_SUCCESS,
             "unLike board"
@@ -51,7 +55,7 @@ public class BoardLikeController {
     @ApiOperation("모든 board 즐겨 찾기")
     @GetMapping(value = "/likes")
     public ResponseEntity<ResponseDto> allLikeBoard(@AuthMember LoggedInMember loggedInMember){
-       Stream<ReadBoardLikeResponse> allLikeBoards = boardLikeService.likeBoards(loggedInMember.getId());
+        Stream<ReadBoardLikeResponse> allLikeBoards = boardLikeService.likeBoards(loggedInMember);
         return responseHandler.toResponseEntity(
             ResponseMessage.CREATE_BOARD_SUCCESS,
             allLikeBoards

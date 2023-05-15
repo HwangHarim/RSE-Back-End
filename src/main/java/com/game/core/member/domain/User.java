@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.game.core.common.domain.BaseTime;
 import com.game.core.oauth.domain.ProviderType;
 import com.game.core.oauth.domain.RoleType;
+import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -32,6 +34,9 @@ public class User extends BaseTime {
     @Column(name = "user_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userSeq;
+
+    @ElementCollection
+    private List<Long> likeIds;
 
     @Column(name = "user_id", length = 64, unique = true)
     @NotNull
