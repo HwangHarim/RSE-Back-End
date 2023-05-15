@@ -1,6 +1,5 @@
 package com.game.core.comment.domain;
 
-import com.game.core.board.domain.vo.LikeTag;
 import com.game.core.board.domain.Board;
 import com.game.core.common.domain.BaseTime;
 import javax.persistence.Column;
@@ -38,6 +37,7 @@ public class Comment extends BaseTime {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
 
+    private String userId;
     @Column(columnDefinition = "Long default 0", nullable = false)
     private Long likeViews;
 
@@ -47,8 +47,9 @@ public class Comment extends BaseTime {
         }
         this.board = board;
         //무한 루프 빠지지 않도록
-        if (!board.getComments().contains(this))
+        if (!board.getComments().contains(this)) {
             board.getComments().add(this);
+        }
     }
 
     public void upLikeView(Long likeViews){
