@@ -4,8 +4,10 @@ import com.game.core.board.infrastructure.BoardRepository;
 import com.game.core.member.dto.LoggedInMember;
 import com.game.core.report.dto.request.CreateReportRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
+@Component
 public class ReadReportResponse {
     private final BoardRepository boardRepository;
     public String reportContent(CreateReportRequest createReportRequest, LoggedInMember member) {
