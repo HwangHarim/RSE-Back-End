@@ -11,6 +11,8 @@ import com.game.core.board.dto.request.board.CreateBoardRequest;
 import com.game.core.board.dto.request.board.UpdateBoardRequest;
 import com.game.core.error.dto.ErrorMessage;
 import com.game.core.error.exception.board.NotFindBoardException;
+import com.game.core.member.dto.LoggedInMember;
+import java.util.Objects;
 import java.util.Optional;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,21 +28,21 @@ public class BoardService {
 
     @Transactional
     public Page<ReadBoardResponse> getAllBoards(Pageable pageable){
-            Page<Board> boardPage = boardRepository.findAll(pageable);
-            return boardPage.map(
-                Board ->
-                    ReadBoardResponse.builder()
-                        .id(Board.getId())
-                        .userName(Board.getUserName())
-                        .title(Board.getTitle())
-                        .content(Board.getContent())
-                        .createTime(Board.getCreatedDate())
-                        .view(Board.getView())
-                        .likeCount(Board.getLikeCount())
-                        .type(String.valueOf(Board.getType()))
-                        .modified(Board.getModifiedDate())
-                        .build()
-            );
+        Page<Board> boardPage = boardRepository.findAll(pageable);
+        return boardPage.map(
+            Board ->
+                ReadBoardResponse.builder()
+                    .id(Board.getId())
+                    .userName(Board.getUserName())
+                    .title(Board.getTitle())
+                    .content(Board.getContent())
+                    .createTime(Board.getCreatedDate())
+                    .view(Board.getView())
+                    .likeCount(Board.getLikeCount())
+                    .type(String.valueOf(Board.getType()))
+                    .modified(Board.getModifiedDate())
+                    .build()
+        );
 
     }
 
@@ -96,26 +98,32 @@ public class BoardService {
             .content(createBoardRequest.getContent())
             .type(Type.valueOf(createBoardRequest.getType()))
             .build();
-  //      board.addBoardPhotos(boardConverter.convert(createBoardRequest.getPhotos()));
         boardRepository.save(board);
     }
 
     @Transactional
-    public void updateBoard(Long id,UpdateBoardRequest updateBoardRequest){
+    public void updateBoard(Long id, LoggedInMember loggedInMember, UpdateBoardRequest updateBoardRequest){
         Board board = boardRepository.findById(id)
             .orElseThrow(()-> {
                 throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
-                });
-        board.update(
-           updateBoardRequest.getTitle(),
-            updateBoardRequest.getContent()
-        );
-        boardRepository.save(board);
+            });
+        if(Objects.equals(loggedInMember.getId(), board.getUserName())){
+            board.update(
+                updateBoardRequest.getTitle(),
+                updateBoardRequest.getContent()
+            );
+            boardRepository.save(board);
+        }
+
     }
 
     @Transactional
-    public ReadBoardResponse findBoard(Long id) {
+    public ReadBoardResponse findBoard(Long id, LoggedInMember loggedInMember) {
         Optional<Board> board = boardRepository.findById(id);
+        boolean mineStatus = false;
+        if(Objects.equals(loggedInMember.getId(), board.get().getUserName())){
+            mineStatus = true;
+        }
         board.get().updateView(board.get().getView());
         return ReadBoardResponse.builder()
             .id(board.get().getId())
@@ -127,19 +135,15 @@ public class BoardService {
             .likeCount(board.get().getLikeCount())
             .createTime(board.get().getCreatedDate())
             .modified(board.get().getModifiedDate())
+            .mine(mineStatus)
             .build();
     }
 
-    public void changeTag(Long id, String tag){
-        Board board = boardRepository.findById(id)
-            .orElseThrow(()-> {
-                throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
-            });
-        board.changeTage(Type.valueOf(tag));
-        boardRepository.save(board);
-    }
-
-    public void deleteBoard(Long id){
-        boardRepository.deleteById(id);
+    @Transactional
+    public void deleteBoard(Long id, LoggedInMember loggedInMember){
+        Optional<Board> board = boardRepository.findById(id);
+        if(Objects.equals(loggedInMember.getId(), board.get().getUserName())){
+            boardRepository.deleteById(id);
+        }
     }
 }
