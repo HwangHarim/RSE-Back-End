@@ -62,8 +62,8 @@ dependencies {
 }
 
 configurations {
-	all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-	all*.exclude group: 'org.springframework.boot', module: 'logback-classic'
+//	all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+//	all*.exclude group: 'org.springframework.boot', module: 'logback-classic'
 }
 
 tasks.named('test') {

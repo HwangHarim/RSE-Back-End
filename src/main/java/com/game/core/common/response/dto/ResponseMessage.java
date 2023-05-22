@@ -10,6 +10,7 @@ public enum ResponseMessage {
     //user message
     USER_INFO(HttpStatus.OK, "User 정보"),
     UPDATE_USER_NAME(HttpStatus.OK, "User 이름 변경 완료"),
+    DELETE_USER(HttpStatus.OK, "user 삭제 완료"),
 
 
     //token message

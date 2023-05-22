@@ -10,9 +10,12 @@ import com.game.core.error.dto.ErrorMessage;
 import com.game.core.error.exception.token.InvalidAccessTokenException;
 import com.game.core.error.exception.token.InvalidRefreshTokenException;
 import com.game.core.error.exception.token.NotExpiredTokenException;
+import com.game.core.member.application.UserService;
 import com.game.core.member.domain.UserRefreshToken;
 import com.game.core.member.dto.AuthReqModel;
+import com.game.core.member.dto.LoggedInMember;
 import com.game.core.member.infrastructure.UserRefreshTokenRepository;
+import com.game.core.member.infrastructure.annotation.AuthMember;
 import com.game.core.oauth.domain.RoleType;
 import com.game.core.oauth.domain.UserPrincipal;
 import com.game.core.oauth.token.AuthToken;
@@ -28,6 +31,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +44,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AppProperties appProperties;
+    private final UserService userService;
     private final AuthTokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
@@ -48,6 +53,12 @@ public class AuthController {
 
     private final static long THREE_DAYS_MSEC = 259200000;
     private final static String REFRESH_TOKEN = "refresh_token";
+
+    @DeleteMapping
+    public ResponseEntity<ResponseDto> removeUser(@AuthMember LoggedInMember loggedInMember){
+        userService.removeUser(loggedInMember);
+        return responseHandler.toResponseEntity(ResponseMessage.DELETE_USER,"삭제 완료");
+    }
 
     @PostMapping("/login")
     public ResponseEntity<ResponseDto> login(
