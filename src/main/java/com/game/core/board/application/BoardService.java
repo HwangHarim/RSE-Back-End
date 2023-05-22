@@ -2,6 +2,7 @@ package com.game.core.board.application;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
+import com.game.core.board.converter.BoardConverter;
 import com.game.core.board.domain.Board;
 import com.game.core.board.domain.vo.Type;
 import com.game.core.board.dto.response.board.ReadBoardResponse;
@@ -30,18 +31,7 @@ public class BoardService {
     public Page<ReadBoardResponse> getAllBoards(Pageable pageable){
         Page<Board> boardPage = boardRepository.findAll(pageable);
         return boardPage.map(
-            Board ->
-                ReadBoardResponse.builder()
-                    .id(Board.getId())
-                    .userName(Board.getUserName())
-                    .title(Board.getTitle())
-                    .content(Board.getContent())
-                    .createTime(Board.getCreatedDate())
-                    .view(Board.getView())
-                    .likeCount(Board.getLikeCount())
-                    .type(String.valueOf(Board.getType()))
-                    .modified(Board.getModifiedDate())
-                    .build()
+            BoardConverter::toAllReadBoardResponse
         );
 
     }
@@ -52,18 +42,7 @@ public class BoardService {
             where(BoardSpecification.searchLecture(type))
             , pageable);
         return boardPage.map(
-            Board ->
-                ReadBoardResponse.builder()
-                    .id(Board.getId())
-                    .userName(Board.getUserName())
-                    .title(Board.getTitle())
-                    .content(Board.getContent())
-                    .view(Board.getView())
-                    .likeCount(Board.getLikeCount())
-                    .createTime(Board.getCreatedDate())
-                    .type(String.valueOf(Board.getType()))
-                    .modified(Board.getModifiedDate())
-                    .build()
+            BoardConverter::toAllReadBoardResponse
         );
 
     }
@@ -74,31 +53,13 @@ public class BoardService {
             where(BoardSpecification.searchTitleLecture(title))
             , pageable);
         return boardPage.map(
-            Board ->
-                ReadBoardResponse.builder()
-                    .id(Board.getId())
-                    .userName(Board.getUserName())
-                    .title(Board.getTitle())
-                    .content(Board.getContent())
-                    .createTime(Board.getCreatedDate())
-                    .type(String.valueOf(Board.getType()))
-                    .view(Board.getView())
-                    .likeCount(Board.getLikeCount())
-                    .modified(Board.getModifiedDate())
-                    .build()
+                BoardConverter::toAllReadBoardResponse
         );
-
     }
 
     @Transactional
     public void createBoard(@NotNull CreateBoardRequest createBoardRequest, String user) {
-        Board board = Board.builder()
-            .userName(user)
-            .title(createBoardRequest.getTitle())
-            .content(createBoardRequest.getContent())
-            .type(Type.valueOf(createBoardRequest.getType()))
-            .build();
-        boardRepository.save(board);
+        boardRepository.save(BoardConverter.toBoardEntity(createBoardRequest, user));
     }
 
     @Transactional
@@ -112,31 +73,12 @@ public class BoardService {
                 updateBoardRequest.getTitle(),
                 updateBoardRequest.getContent()
             );
-            boardRepository.save(board);
         }
-
     }
 
     @Transactional
     public ReadBoardResponse findBoard(Long id, LoggedInMember loggedInMember) {
-        Optional<Board> board = boardRepository.findById(id);
-        boolean mineStatus = false;
-        if(Objects.equals(loggedInMember.getId(), board.get().getUserName())){
-            mineStatus = true;
-        }
-        board.get().updateView(board.get().getView());
-        return ReadBoardResponse.builder()
-            .id(board.get().getId())
-            .title(board.get().getTitle())
-            .userName(board.get().getUserName())
-            .content(board.get().getContent())
-            .type(board.get().getType().name())
-            .view(board.get().getView())
-            .likeCount(board.get().getLikeCount())
-            .createTime(board.get().getCreatedDate())
-            .modified(board.get().getModifiedDate())
-            .mine(mineStatus)
-            .build();
+        return BoardConverter.toReadBoardResponse(boardRepository.findById(id).get(), loggedInMember);
     }
 
     @Transactional
