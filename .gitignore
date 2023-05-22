@@ -19,7 +19,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-application-h2.yml
+application-db.yml
 application-oauth.yml
 application-slack.yml
 application-s3.yml
