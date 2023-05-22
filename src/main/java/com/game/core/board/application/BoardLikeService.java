@@ -1,5 +1,6 @@
 package com.game.core.board.application;
 
+import com.game.core.board.converter.BoardConverter;
 import com.game.core.board.domain.Board;
 import com.game.core.board.dto.response.boardLike.ReadBoardLikeResponse;
 import com.game.core.board.infrastructure.BoardRepository;
@@ -53,17 +54,7 @@ public class BoardLikeService {
             likes.add(boardRepository.findById(boardId).get());
         }
         return likes.stream().map(
-            Board ->
-                ReadBoardLikeResponse.builder()
-                    .id(Board.getId())
-                    .userName(Board.getUserName())
-                    .title(Board.getTitle())
-                    .content(Board.getContent())
-                    .views(Board.getView())
-                    .likeCount(Board.getLikeCount())
-                    .createTime(Board.getCreatedDate())
-                    .modified(Board.getModifiedDate())
-                    .build()
+            BoardConverter::toReadBoardLikeResponse
         );
     }
 }

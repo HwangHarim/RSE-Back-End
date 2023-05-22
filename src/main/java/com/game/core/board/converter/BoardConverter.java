@@ -4,6 +4,7 @@ import com.game.core.board.domain.Board;
 import com.game.core.board.domain.vo.Type;
 import com.game.core.board.dto.request.board.CreateBoardRequest;
 import com.game.core.board.dto.response.board.ReadBoardResponse;
+import com.game.core.board.dto.response.boardLike.ReadBoardLikeResponse;
 import com.game.core.board.infrastructure.BoardRepository;
 import com.game.core.member.dto.LoggedInMember;
 import java.util.Objects;
@@ -58,4 +59,18 @@ public class BoardConverter {
             .modified(board.getModifiedDate())
             .build();
     }
+
+    public static ReadBoardLikeResponse toReadBoardLikeResponse(Board board){
+        return ReadBoardLikeResponse.builder()
+            .id(board.getId())
+            .userName(board.getUserName())
+            .title(board.getTitle())
+            .content(board.getContent())
+            .views(board.getView())
+            .likeCount(board.getLikeCount())
+            .createTime(board.getCreatedDate())
+            .modified(board.getModifiedDate())
+            .build();
+    }
+
 }
