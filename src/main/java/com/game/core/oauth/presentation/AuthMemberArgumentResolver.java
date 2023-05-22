@@ -55,6 +55,7 @@ public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver
             LoggedInMember.builder()
                 .id(users.getUserId())
                 .email(users.getEmail())
+                .userName(users.getUsername())
                 .profileUrl(users.getProfileImageUrl())
                 .build()
             );

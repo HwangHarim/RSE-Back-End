@@ -50,7 +50,6 @@ public class Board extends BaseTime {
     @Column(columnDefinition = "Long default 0", nullable = false)
     private Long likeCount;
 
-
     @OneToMany(mappedBy = "board")
     private List<Comment> comments = new ArrayList<>();
 
