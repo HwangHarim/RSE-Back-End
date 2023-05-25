@@ -2,6 +2,7 @@ package com.game.core.comment.application;
 
 import com.game.core.board.domain.Board;
 import com.game.core.board.infrastructure.BoardRepository;
+import com.game.core.comment.convert.CommentConverter;
 import com.game.core.comment.dto.request.CreateCommentRequest;
 import com.game.core.comment.dto.request.UpdateCommentRequest;
 import com.game.core.comment.dto.response.ReadCommentResponse;
@@ -10,7 +11,6 @@ import com.game.core.error.dto.ErrorMessage;
 import com.game.core.comment.domain.Comment;
 import com.game.core.error.exception.board.NotFindBoardException;
 import com.game.core.member.dto.LoggedInMember;
-import com.game.core.member.infrastructure.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,12 +32,7 @@ public class CommentService {
                 throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
             });
         board.addComment(commentRepository.save(
-            Comment.builder()
-                .content(createCommentRequest.getContent())
-                .userId(loggedInMember.getId())
-                .likeViews(board.getLikeCount())
-                .board(board)
-                .build()
+            CommentConverter.toEntity(board, createCommentRequest, loggedInMember)
         ));
         boardRepository.save(board);
     }
@@ -94,15 +89,8 @@ public class CommentService {
         List<ReadCommentResponse> commentResults = new ArrayList<>();
 
 
-        comments.forEach(s -> commentRequests.add(
-            ReadCommentResponse.builder()
-                .id(s.getId())
-                .boardId(s.getBoard().getId())
-                .userId(loggedInMember.getId())
-                .comment(s.getContent())
-                .mine(false)
-                .likeView(s.getLikeViews())
-                .build()
+        comments.forEach(comment -> commentRequests.add(
+            CommentConverter.toReadCommentResponse(comment, loggedInMember)
         ));
         for(ReadCommentResponse x : commentRequests){
             if(loggedInMember.getId().equals(x.getUserId())){
