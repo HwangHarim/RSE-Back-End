@@ -5,17 +5,12 @@ import com.game.core.board.domain.vo.Type;
 import com.game.core.board.dto.request.board.CreateBoardRequest;
 import com.game.core.board.dto.response.board.ReadBoardResponse;
 import com.game.core.board.dto.response.boardLike.ReadBoardLikeResponse;
-import com.game.core.board.infrastructure.BoardRepository;
 import com.game.core.member.dto.LoggedInMember;
 import java.util.Objects;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class BoardConverter {
-
-    private final BoardRepository boardRepository;
 
     public static Board toBoardEntity(CreateBoardRequest createBoardRequest, String user) {
         return Board.builder()
@@ -72,5 +67,4 @@ public class BoardConverter {
             .modified(board.getModifiedDate())
             .build();
     }
-
 }
