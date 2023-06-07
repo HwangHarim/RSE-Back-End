@@ -1,4 +1,4 @@
-# 🪧RSE - 커뮤니티 사이트 (Team Project)
+# RSE-Back-End
 🗣️커뮤니티 사트 입니다!
 ---
 
