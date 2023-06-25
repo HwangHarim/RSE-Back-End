@@ -68,7 +68,7 @@ public class BoardController {
     @ApiOperation("board 생성")
     @PostMapping
     public ResponseEntity<ResponseDto> postBoard(@AuthMember LoggedInMember loggedInMember, @RequestBody CreateBoardRequest createBoardRequest){
-        boardService.createBoard(createBoardRequest, loggedInMember.getId());
+        boardService.createBoard(createBoardRequest, loggedInMember.getUserName());
         return responseHandler.toResponseEntity(
             ResponseMessage.CREATE_BOARD_SUCCESS,
             "board 생성이 완료 되었습니다."

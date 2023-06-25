@@ -11,7 +11,9 @@ import com.game.core.board.dto.request.board.CreateBoardRequest;
 import com.game.core.board.dto.request.board.UpdateBoardRequest;
 import com.game.core.error.dto.ErrorMessage;
 import com.game.core.error.exception.board.NotFindBoardException;
+import com.game.core.member.domain.User;
 import com.game.core.member.dto.LoggedInMember;
+import com.game.core.member.infrastructure.UserRepository;
 import java.util.Objects;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public Page<ReadBoardResponse> getAllBoards(Pageable pageable){
@@ -43,7 +46,6 @@ public class BoardService {
                     .modified(Board.getModifiedDate())
                     .build()
         );
-
     }
 
     @Transactional
@@ -114,15 +116,19 @@ public class BoardService {
             );
             boardRepository.save(board);
         }
-
     }
 
     @Transactional
     public ReadBoardResponse findBoard(Long id, LoggedInMember loggedInMember) {
         Optional<Board> board = boardRepository.findById(id);
+        User user = userRepository.findByUsername(loggedInMember.getUserName());
         boolean mineStatus = false;
-        if(Objects.equals(loggedInMember.getId(), board.get().getUserName())){
+        boolean likeMineStatus = false;
+        if(Objects.equals(loggedInMember.getUserName(), board.get().getUserName())){
             mineStatus = true;
+        }
+        if(user.getLikeIds().contains(id)){
+            likeMineStatus = true;
         }
         board.get().updateView(board.get().getView());
         return ReadBoardResponse.builder()
@@ -133,6 +139,7 @@ public class BoardService {
             .type(board.get().getType().name())
             .view(board.get().getView())
             .likeCount(board.get().getLikeCount())
+            .likeMine(likeMineStatus)
             .createTime(board.get().getCreatedDate())
             .modified(board.get().getModifiedDate())
             .mine(mineStatus)

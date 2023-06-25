@@ -32,7 +32,7 @@ public class UserController {
     @PatchMapping
     public ResponseEntity<ResponseDto> updateUserName(@AuthMember LoggedInMember loggedInMember, @RequestBody
         UpdateUserName updateUserName){
-        userService.updateUserName(loggedInMember.getId(), updateUserName);
+        userService.updateUserName(loggedInMember, updateUserName);
         return responseHandler.toResponseEntity(ResponseMessage.UPDATE_USER_NAME,"userName 변경 완료.");
     }
 }

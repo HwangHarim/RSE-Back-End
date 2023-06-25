@@ -64,6 +64,7 @@ public class Board extends BaseTime {
         this.title = title;
         this.content = content;
     }
+
     public Long updateView(Long view){
         this.view = view+1;
         return this.view;
