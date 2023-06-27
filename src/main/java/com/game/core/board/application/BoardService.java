@@ -109,7 +109,7 @@ public class BoardService {
             .orElseThrow(()-> {
                 throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
             });
-        if(Objects.equals(loggedInMember.getId(), board.getUserName())){
+        if(Objects.equals(loggedInMember.getUserName(), board.getUserName())){
             board.update(
                 updateBoardRequest.getTitle(),
                 updateBoardRequest.getContent()
@@ -149,7 +149,7 @@ public class BoardService {
     @Transactional
     public void deleteBoard(Long id, LoggedInMember loggedInMember){
         Optional<Board> board = boardRepository.findById(id);
-        if(Objects.equals(loggedInMember.getId(), board.get().getUserName())){
+        if(Objects.equals(loggedInMember.getUserName(), board.get().getUserName())){
             boardRepository.deleteById(id);
         }
     }

@@ -48,7 +48,7 @@ public class CommentService {
             .orElseThrow(()-> {
                 throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
             });
-        if(Objects.equals(comment.getBoard().getUserName(), member.getId())){
+        if(Objects.equals(comment.getBoard().getUserName(), member.getUserName())){
             comment.update(
                 updateCommentRequest.getContent()
             );
@@ -64,7 +64,7 @@ public class CommentService {
             .orElseThrow(()-> {
                 throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
             });
-        if(Objects.equals(comment.getBoard().getUserName(), member.getId())){
+        if(Objects.equals(comment.getBoard().getUserName(), member.getUserName())){
             comment.upLikeView(comment.getLikeViews());
             commentRepository.save(comment);
             return;
@@ -78,7 +78,7 @@ public class CommentService {
             .orElseThrow(()-> {
                 throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
             });
-        if(Objects.equals(comment.getBoard().getUserName(), member.getId())){
+        if(Objects.equals(comment.getBoard().getUserName(), member.getUserName())){
             comment.downLikeView(comment.getLikeViews());
             commentRepository.save(comment);
             return;
@@ -99,6 +99,7 @@ public class CommentService {
                 .id(s.getId())
                 .boardId(s.getBoard().getId())
                 .userId(loggedInMember.getId())
+                .userName(loggedInMember.getUserName())
                 .comment(s.getContent())
                 .mine(false)
                 .likeView(s.getLikeViews())
@@ -122,7 +123,7 @@ public class CommentService {
             .orElseThrow(()-> {
                 throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
             });
-        if(Objects.equals(loggedInMember.getId(), comment.getBoard().getUserName())){
+        if(Objects.equals(loggedInMember.getUserName(), comment.getBoard().getUserName())){
             commentRepository.deleteById(comment.getId());
         }
     }

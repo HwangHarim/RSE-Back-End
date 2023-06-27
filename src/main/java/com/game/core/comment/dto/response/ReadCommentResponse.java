@@ -10,6 +10,7 @@ import lombok.Setter;
 public class ReadCommentResponse {
     Long id;
     String userId;
+    String userName;
     Long boardId;
     String comment;
     boolean mine;
