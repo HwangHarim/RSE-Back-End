@@ -38,6 +38,9 @@ public class User extends BaseTime {
     @ElementCollection
     private List<Long> likeIds;
 
+    @ElementCollection
+    private List<Long> likeCommentIds;
+
     @Column(name = "user_id", length = 64, unique = true)
     @NotNull
     @Size(max = 64)

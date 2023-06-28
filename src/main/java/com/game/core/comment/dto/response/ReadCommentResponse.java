@@ -14,5 +14,6 @@ public class ReadCommentResponse {
     Long boardId;
     String comment;
     boolean mine;
+    boolean likeMine;
     Long likeView;
 }

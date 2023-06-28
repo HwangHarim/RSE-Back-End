@@ -38,8 +38,6 @@ public class CommentController {
         @PathVariable("id") Long id,
         @AuthMember LoggedInMember loggedInMember,
         @RequestBody CreateCommentRequest createCommentRequest) {
-        System.out.println(id);
-        System.out.println(createCommentRequest.getContent());
         commentService.createComment(id,loggedInMember, createCommentRequest);
         return responseHandler.toResponseEntity(
             ResponseMessage.CREATE_COMMENT_SUCCESS,

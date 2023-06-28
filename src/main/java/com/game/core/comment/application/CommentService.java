@@ -9,6 +9,7 @@ import com.game.core.comment.infrastructure.CommentRepository;
 import com.game.core.error.dto.ErrorMessage;
 import com.game.core.comment.domain.Comment;
 import com.game.core.error.exception.board.NotFindBoardException;
+import com.game.core.member.domain.User;
 import com.game.core.member.dto.LoggedInMember;
 import com.game.core.member.infrastructure.UserRepository;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final  UserRepository userRepository;
     private final BoardRepository boardRepository;
 
     @Transactional
@@ -66,6 +68,9 @@ public class CommentService {
             });
         if(Objects.equals(comment.getBoard().getUserName(), member.getUserName())){
             comment.upLikeView(comment.getLikeViews());
+            User user = userRepository.findByUserId(member.getId());
+            user.getLikeCommentIds().add(id);
+            userRepository.save(user);
             commentRepository.save(comment);
             return;
         }
@@ -80,6 +85,9 @@ public class CommentService {
             });
         if(Objects.equals(comment.getBoard().getUserName(), member.getUserName())){
             comment.downLikeView(comment.getLikeViews());
+            User user = userRepository.findByUserId(member.getId());
+            user.getLikeCommentIds().remove(id);
+            userRepository.save(user);
             commentRepository.save(comment);
             return;
         }
@@ -90,8 +98,10 @@ public class CommentService {
     @Transactional
     public List<ReadCommentResponse> getComments(Long boardId, LoggedInMember loggedInMember) {
         List<Comment> comments = commentRepository.findAllByBoardId(boardId);
+        User user = userRepository.findByUsername(loggedInMember.getUserName());
         List<ReadCommentResponse> commentRequests = new ArrayList<>();
         List<ReadCommentResponse> commentResults = new ArrayList<>();
+        List<ReadCommentResponse> commentLikeResults = new ArrayList<>();
 
 
         comments.forEach(s -> commentRequests.add(
@@ -102,6 +112,7 @@ public class CommentService {
                 .userName(loggedInMember.getUserName())
                 .comment(s.getContent())
                 .mine(false)
+                .likeMine(false)
                 .likeView(s.getLikeViews())
                 .build()
         ));
@@ -111,6 +122,12 @@ public class CommentService {
                 commentResults.add(x);
             }else{
                 commentResults.add(x);
+            }
+        }
+
+        if(!user.getLikeCommentIds().isEmpty()){
+            for(Long likeIdx : user.getLikeCommentIds()){
+                commentResults.get(Math.toIntExact(likeIdx)-1).setLikeMine(true);
             }
         }
 
