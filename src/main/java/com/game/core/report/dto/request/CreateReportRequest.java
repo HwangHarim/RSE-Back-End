@@ -12,7 +12,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class CreateReportRequest {
-    private Long reportUserId;
     private Long boardId;
     private String content;
 }
