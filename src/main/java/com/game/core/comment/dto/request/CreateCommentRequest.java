@@ -1,12 +1,8 @@
 package com.game.core.comment.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
 public class CreateCommentRequest {
     private String content;
 }

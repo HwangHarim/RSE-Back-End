@@ -1,12 +1,12 @@
-package com.game.core.board.dto.response.boardLike;
+package com.game.core.board.dto.response.board;
 
 import java.time.LocalDateTime;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @Builder
-public class ReadBoardLikeResponse{
+public class ReadAllBoardResponse {
     private Long id;
     private String userName;
     private String title;

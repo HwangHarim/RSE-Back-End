@@ -1,147 +1,66 @@
 package com.game.core.comment.application;
 
-import com.game.core.board.domain.Board;
 import com.game.core.board.infrastructure.BoardRepository;
+import com.game.core.comment.domain.Comment;
+import com.game.core.comment.domain.LikeComment;
+import com.game.core.comment.domain.convert.CommentConverter;
 import com.game.core.comment.dto.request.CreateCommentRequest;
 import com.game.core.comment.dto.request.UpdateCommentRequest;
 import com.game.core.comment.dto.response.ReadCommentResponse;
 import com.game.core.comment.infrastructure.CommentRepository;
+import com.game.core.comment.infrastructure.LikeCommentRepository;
 import com.game.core.error.dto.ErrorMessage;
-import com.game.core.comment.domain.Comment;
 import com.game.core.error.exception.board.NotFindBoardException;
-import com.game.core.member.domain.User;
 import com.game.core.member.dto.LoggedInMember;
-import com.game.core.member.infrastructure.UserRepository;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import javax.transaction.Transactional;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class CommentService {
 
     private final CommentRepository commentRepository;
-    private final  UserRepository userRepository;
     private final BoardRepository boardRepository;
+
+    private final LikeCommentRepository likeCommentRepository;
+    private final CommentConverter converter;
+
 
     @Transactional
     public void createComment(Long id,LoggedInMember loggedInMember, CreateCommentRequest createCommentRequest){
-        Board board = boardRepository.findById(id)
+        boardRepository.findById(id)
             .orElseThrow(()-> {
                 throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
             });
-        board.addComment(commentRepository.save(
-            Comment.builder()
-                .content(createCommentRequest.getContent())
-                .userId(loggedInMember.getId())
-                .likeViews(board.getLikeCount())
-                .board(board)
-                .build()
-        ));
-        boardRepository.save(board);
+        Comment A =   converter.convertToCommentEntity(createCommentRequest, loggedInMember, id);
+         commentRepository.save(A);
     }
 
     @Transactional
     public void updateComment(Long id, UpdateCommentRequest updateCommentRequest, LoggedInMember member){
-        Comment comment = commentRepository.findById(id)
+        Comment comment = commentRepository.findCommentByIdAndUserId(id, member.getId())
             .orElseThrow(()-> {
                 throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
             });
-        if(Objects.equals(comment.getBoard().getUserName(), member.getUserName())){
-            comment.update(
-                updateCommentRequest.getContent()
-            );
+            comment.update(updateCommentRequest.getContent());
             commentRepository.save(comment);
-            return;
-        }
-        throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
     }
 
-    @Transactional
-    public void upLikeViews(Long id, LoggedInMember member){
-        Comment comment = commentRepository.findById(id)
-            .orElseThrow(()-> {
-                throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
-            });
-        if(Objects.equals(comment.getBoard().getUserName(), member.getUserName())){
-            comment.upLikeView(comment.getLikeViews());
-            User user = userRepository.findByUserId(member.getId());
-            user.getLikeCommentIds().add(id);
-            userRepository.save(user);
-            commentRepository.save(comment);
-            return;
-        }
-        throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
-    }
-
-    @Transactional
-    public void downLikeViews(Long id, LoggedInMember member){
-        Comment comment = commentRepository.findById(id)
-            .orElseThrow(()-> {
-                throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
-            });
-        if(Objects.equals(comment.getBoard().getUserName(), member.getUserName())){
-            comment.downLikeView(comment.getLikeViews());
-            User user = userRepository.findByUserId(member.getId());
-            user.getLikeCommentIds().remove(id);
-            userRepository.save(user);
-            commentRepository.save(comment);
-            return;
-        }
-        throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
-    }
-
-
-    @Transactional
-    public List<ReadCommentResponse> getComments(Long boardId, LoggedInMember loggedInMember) {
-        List<Comment> comments = commentRepository.findAllByBoardId(boardId);
-        User user = userRepository.findByUsername(loggedInMember.getUserName());
-        List<ReadCommentResponse> commentRequests = new ArrayList<>();
-        List<ReadCommentResponse> commentResults = new ArrayList<>();
-        List<ReadCommentResponse> commentLikeResults = new ArrayList<>();
-
-
-        comments.forEach(s -> commentRequests.add(
-            ReadCommentResponse.builder()
-                .id(s.getId())
-                .boardId(s.getBoard().getId())
-                .userId(loggedInMember.getId())
-                .userName(loggedInMember.getUserName())
-                .comment(s.getContent())
-                .mine(false)
-                .likeMine(false)
-                .likeView(s.getLikeViews())
-                .build()
-        ));
-        for(ReadCommentResponse x : commentRequests){
-            if(loggedInMember.getId().equals(x.getUserId())){
-                x.setMine(true);
-                commentResults.add(x);
-            }else{
-                commentResults.add(x);
-            }
-        }
-
-        if(!user.getLikeCommentIds().isEmpty()){
-            for(Long likeIdx : user.getLikeCommentIds()){
-                commentResults.get(Math.toIntExact(likeIdx)-1).setLikeMine(true);
-            }
-        }
-
-        return commentResults;
+    @Transactional(readOnly = true)
+    public Page<ReadCommentResponse> getComments(Long boardId, LoggedInMember loggedInMember, Pageable pageable) {
+        Optional<LikeComment> likeComment = likeCommentRepository.findByUserId(loggedInMember.getId());
+        Page<Comment> comments = commentRepository.findAllByBoardId(boardId, pageable);
+        return comments.map(
+            Comment -> converter.convertToReadCommentResponse(Comment, loggedInMember, likeComment)
+        );
     }
 
     @Transactional
     public void deleteComment(Long commentId, LoggedInMember loggedInMember) {
-        Comment comment = commentRepository.findById(commentId)
-            .orElseThrow(()-> {
-                throw new NotFindBoardException(ErrorMessage.NOT_FIND_ID_BOARD);
-            });
-        if(Objects.equals(loggedInMember.getUserName(), comment.getBoard().getUserName())){
-            commentRepository.deleteById(comment.getId());
-        }
+        commentRepository.deleteByIdAndUserId(commentId, loggedInMember.getId());
     }
 }

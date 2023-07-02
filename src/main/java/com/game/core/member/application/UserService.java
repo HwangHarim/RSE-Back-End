@@ -2,8 +2,10 @@ package com.game.core.member.application;
 
 import com.game.core.board.domain.Board;
 import com.game.core.board.infrastructure.BoardRepository;
+import com.game.core.comment.infrastructure.CommentRepository;
 import com.game.core.error.dto.ErrorMessage;
 import com.game.core.error.exception.member.DuplicateUserException;
+import com.game.core.error.exception.member.NotFoundUserException;
 import com.game.core.member.domain.User;
 import com.game.core.member.dto.LoggedInMember;
 import com.game.core.member.dto.request.UpdateUserName;
@@ -21,10 +23,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
 
     public void removeUser(LoggedInMember member){
-        List<Board> boards = boardRepository.findBoardsByUserName(member.getId());
-        boardRepository.deleteAll(boards);
+        boardRepository.deleteAllByUserId(member.getId());
+        commentRepository.deleteAllByUserId(member.getId());
         userRepository.delete(userRepository.findByUserId(member.getId()));
     }
 
@@ -44,6 +47,8 @@ public class UserService {
     }
 
     public LoggedInMember viewUser(String userId){
-        return LoggedInMember.from(userRepository.findByUserId(userId));
+        return LoggedInMember.from(
+            userRepository.findByUserId(userId)
+        );
     }
 }

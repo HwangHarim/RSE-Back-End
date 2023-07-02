@@ -20,6 +20,7 @@ public enum ResponseMessage {
     * board message
     **/
     CREATE_BOARD_SUCCESS(HttpStatus.CREATED, "Board 추가 성공"),
+    READ_VIEW_BOARD_SUCCESS(HttpStatus.OK,"Board view 조회 성공"),
     UPDATE_BOARD_SUCCESS(HttpStatus.OK,"Board 수정 성공"),
     READ_ALL_BOARD_SUCCESS(HttpStatus.OK,"Board 전체 조회 성공"),
     READ_BOARD_SUCCESS(HttpStatus.OK,"Board 아이디 조회 성공"),

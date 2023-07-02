@@ -11,18 +11,19 @@ public class LoggedInMember {
     private String id;
     private String email;
     private String profileUrl;
-
     private String userName;
+    private Boolean firstFlag;
 
     protected LoggedInMember() {
     }
 
     @Builder
-    protected LoggedInMember(String id, String email, String profileUrl,String userName) {
+    protected LoggedInMember(String id, String email, String profileUrl,String userName,boolean firstFlag) {
         this.id = id;
         this.email = email;
         this.profileUrl = profileUrl;
         this.userName = userName;
+        this.firstFlag = firstFlag;
     }
 
     public static LoggedInMember from(User member) {
@@ -31,6 +32,7 @@ public class LoggedInMember {
             .email(member.getEmail())
             .profileUrl(member.getProfileImageUrl())
             .userName(member.getUsername())
+            .firstFlag(member.getFirstFlag())
             .build();
     }
 }

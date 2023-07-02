@@ -4,6 +4,7 @@ import com.game.core.board.application.BoardService;
 import com.game.core.board.domain.vo.Type;
 import com.game.core.board.dto.request.board.CreateBoardRequest;
 import com.game.core.board.dto.request.board.UpdateBoardRequest;
+import com.game.core.board.dto.response.board.ReadAllBoardResponse;
 import com.game.core.board.dto.response.board.ReadBoardResponse;
 import com.game.core.common.response.handler.ResponseHandler;
 import com.game.core.common.response.dto.ResponseDto;
@@ -44,21 +45,8 @@ public class BoardController {
         Pageable pageable,
         @RequestParam(value = "type", required = false) String type,
         @RequestParam(value = "title", required = false) String title){
-        if(type != null){
-            Page<ReadBoardResponse> boards = boardService.getTypeBoards(pageable, Type.getType(type));
-            return responseHandler.toResponseEntity(
-                ResponseMessage.READ_ALL_BOARD_SUCCESS,
-                boards
-            );
-        }
-        if(title != null){
-            Page<ReadBoardResponse> boards = boardService.getTitleBoards(pageable, title);
-            return responseHandler.toResponseEntity(
-                ResponseMessage.READ_ALL_BOARD_SUCCESS,
-                boards
-            );
-        }
-        Page<ReadBoardResponse> boards = boardService.getAllBoards(pageable);
+        Page<ReadAllBoardResponse> boards = boardService.getAllBoards(pageable, type, title);
+
         return responseHandler.toResponseEntity(
             ResponseMessage.READ_ALL_BOARD_SUCCESS,
             boards
@@ -67,8 +55,11 @@ public class BoardController {
 
     @ApiOperation("board 생성")
     @PostMapping
-    public ResponseEntity<ResponseDto> postBoard(@AuthMember LoggedInMember loggedInMember, @RequestBody CreateBoardRequest createBoardRequest){
-        boardService.createBoard(createBoardRequest, loggedInMember.getUserName());
+    public ResponseEntity<ResponseDto> postBoard(
+        @AuthMember LoggedInMember loggedInMember,
+        @RequestBody CreateBoardRequest createBoardRequest){
+        boardService.createBoard(createBoardRequest, loggedInMember);
+
         return responseHandler.toResponseEntity(
             ResponseMessage.CREATE_BOARD_SUCCESS,
             "board 생성이 완료 되었습니다."
@@ -77,9 +68,11 @@ public class BoardController {
 
     @ApiOperation("board 검색")
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ResponseDto> getBoard(@PathVariable("id") Long id,
+    public ResponseEntity<ResponseDto> getBoard(
+        @PathVariable("id") Long id,
         @AuthMember LoggedInMember loggedInMember){
         ReadBoardResponse board = boardService.findBoard(id, loggedInMember);
+
         return responseHandler.toResponseEntity(
             ResponseMessage.READ_BOARD_SUCCESS,
             board
@@ -93,6 +86,7 @@ public class BoardController {
         @RequestBody UpdateBoardRequest updateBoardRequest,
         @AuthMember LoggedInMember loggedInMember){
         boardService.updateBoard(id, loggedInMember, updateBoardRequest);
+
         return responseHandler.toResponseEntity(
             ResponseMessage.UPDATE_BOARD_SUCCESS,
             "board 수정이 완료 되었습니다."
@@ -105,9 +99,22 @@ public class BoardController {
         @PathVariable("id") Long id,
         @AuthMember LoggedInMember loggedInMember) {
         boardService.deleteBoard(id, loggedInMember);
+
         return responseHandler.toResponseEntity(
             ResponseMessage.DELETE_BOARD_SUCCESS,
             "board 삭제 완료 되었습니다."
+        );
+    }
+
+    @ApiOperation("board 조회수 조회")
+    @GetMapping(value = "/read/{id}")
+    public ResponseEntity<ResponseDto> readBoard(
+        @PathVariable("id") Long id) {
+        Long totalView = boardService.boardView(id);
+
+        return responseHandler.toResponseEntity(
+            ResponseMessage.READ_VIEW_BOARD_SUCCESS,
+            totalView
         );
     }
 }

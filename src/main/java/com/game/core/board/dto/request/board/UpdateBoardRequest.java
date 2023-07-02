@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateBoardRequest {
     private String title;
+    private String type;
     private String content;
 }

@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.game.core.common.domain.BaseTime;
 import com.game.core.oauth.domain.ProviderType;
 import com.game.core.oauth.domain.RoleType;
-import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -21,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
 
 @Getter
 @Setter
@@ -28,18 +27,13 @@ import lombok.Setter;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "user")
+@DynamicInsert
 public class User extends BaseTime {
     @JsonIgnore
     @Id
     @Column(name = "user_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userSeq;
-
-    @ElementCollection
-    private List<Long> likeIds;
-
-    @ElementCollection
-    private List<Long> likeCommentIds;
 
     @Column(name = "user_id", length = 64, unique = true)
     @NotNull
@@ -82,8 +76,12 @@ public class User extends BaseTime {
     @NotNull
     private RoleType roleType;
 
+    @Column(columnDefinition = "boolean default false")
+    private Boolean firstFlag;
+
     public void updateUsername(String username){
         this.username = username;
+        this.firstFlag = true;
     }
 
     public User(
@@ -94,6 +92,7 @@ public class User extends BaseTime {
             @NotNull @Size(max = 512) String profileImageUrl,
             @NotNull ProviderType providerType,
             @NotNull RoleType roleType
+
     ) {
         this.userId = userId;
         this.username = username;
