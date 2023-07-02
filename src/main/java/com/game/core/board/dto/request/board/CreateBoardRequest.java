@@ -1,6 +1,5 @@
 package com.game.core.board.dto.request.board;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

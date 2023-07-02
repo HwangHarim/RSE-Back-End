@@ -4,15 +4,18 @@ import com.game.core.comment.application.CommentService;
 import com.game.core.comment.dto.request.CreateCommentRequest;
 import com.game.core.comment.dto.request.UpdateCommentRequest;
 import com.game.core.comment.dto.response.ReadCommentResponse;
-import com.game.core.common.response.handler.ResponseHandler;
 import com.game.core.common.response.dto.ResponseDto;
 import com.game.core.common.response.dto.ResponseMessage;
+import com.game.core.common.response.handler.ResponseHandler;
 import com.game.core.member.dto.LoggedInMember;
 import com.game.core.member.infrastructure.annotation.AuthMember;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,37 +62,15 @@ public class CommentController {
         );
     }
 
-    // 댓글 좋아요기능
-    @ApiOperation("comment like")
-    @PatchMapping(value = "/{boardId}/comments/{id}/like")
-    public ResponseEntity<ResponseDto> upLikeView(@AuthMember LoggedInMember member,
-        @PathVariable("id") Long id){
-        commentService.upLikeViews(id, member);
-        return responseHandler.toResponseEntity(
-            ResponseMessage.UPDATE_BOARD_SUCCESS,
-            "like View 를 성공했습니다."
-        );
-    }
-
-    // 댓글 좋아요 취소
-    @ApiOperation("comment unlike")
-    @PatchMapping(value = "/{boardId}/comments/{id}/unlike")
-    public ResponseEntity<ResponseDto> downLikeView(@AuthMember LoggedInMember member,
-        @PathVariable("id") Long id){
-        commentService.downLikeViews(id, member);
-        return responseHandler.toResponseEntity(
-            ResponseMessage.UPDATE_BOARD_SUCCESS,
-            "like View 를 취소했습니다 ."
-        );
-    }
-
     // 게시글에 달린 댓글 모두 불러오기
     @ApiOperation(value = "댓글 불러오기", notes = "게시글에 달린 댓글을 모두 불러온다.")
     @GetMapping("{id}/comments")
     public ResponseEntity<ResponseDto> getComments(
         @PathVariable("id") Long boardId,
-        @AuthMember LoggedInMember loggedInMember) {
-        List<ReadCommentResponse> comments= commentService.getComments(boardId, loggedInMember);
+        @AuthMember LoggedInMember loggedInMember,
+        @PageableDefault(sort ="id", size = 15,direction= Direction.ASC)
+        Pageable pageable) {
+        Page<ReadCommentResponse> comments = commentService.getComments(boardId,loggedInMember,pageable);
         return responseHandler.toResponseEntity(ResponseMessage.READ_COMMENT_SUCCESS, comments);
     }
 

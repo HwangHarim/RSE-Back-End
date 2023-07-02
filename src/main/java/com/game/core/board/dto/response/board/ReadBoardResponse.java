@@ -2,9 +2,9 @@ package com.game.core.board.dto.response.board;
 
 import java.time.LocalDateTime;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @Builder
 public class ReadBoardResponse {
     private Long id;
@@ -14,8 +14,6 @@ public class ReadBoardResponse {
     private String type;
     private LocalDateTime createTime;
     private LocalDateTime modified;
-    private Long view;
-    private Long likeCount;
-    private boolean likeMine;
+    private boolean likeFlag;
     private boolean mine;
 }

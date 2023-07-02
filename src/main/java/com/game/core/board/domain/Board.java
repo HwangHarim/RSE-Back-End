@@ -1,10 +1,8 @@
 package com.game.core.board.domain;
 
 import com.game.core.board.domain.vo.Type;
-import com.game.core.comment.domain.Comment;
+import com.game.core.board.dto.request.board.UpdateBoardRequest;
 import com.game.core.common.domain.BaseTime;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,7 +10,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,6 +30,7 @@ public class Board extends BaseTime {
     @Column(name = "board_id")
     private Long id;
 
+    private String userId;
     private String userName;
 
     @Column(nullable = false)
@@ -50,38 +48,27 @@ public class Board extends BaseTime {
     @Column(columnDefinition = "Long default 0", nullable = false)
     private Long likeCount;
 
-    @OneToMany(mappedBy = "board")
-    private List<Comment> comments = new ArrayList<>();
 
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
-
-        if (comment.getBoard() != this)
-            comment.setBoard(this);
+    public void update(UpdateBoardRequest updateBoardRequest){
+        this.title = updateBoardRequest.getTitle();
+        this.type = Type.valueOf(updateBoardRequest.getType());
+        this.content = updateBoardRequest.getContent();
     }
 
-    public void update(String title, String content){
-        this.title = title;
-        this.content = content;
-    }
-
-    public Long updateView(Long view){
+    public void updateView(Long view){
         this.view = view+1;
-        return this.view;
     }
-    public Long updateUpLikeCount(Long likeCount){
-        this.likeCount = likeCount+1;
-        return this.likeCount;
 
-    }public Long updateDownLikeCount(Long likeCount){
-        this.likeCount = likeCount-1;
-        return this.likeCount;
+    public void updateUpLikeCount(Long likeCount){
+        this.likeCount = likeCount+1;
+
     }
+
+    public void updateDownLikeCount(Long likeCount){
+        this.likeCount = likeCount-1;
+    }
+
     public void setUserName(String userName) {
       this.userName = userName;
-    }
-
-    public void changeTage(Type type){
-        this.type = type;
     }
 }

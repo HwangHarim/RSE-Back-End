@@ -1,5 +1,7 @@
 package com.game.core.oauth.presentation;
 
+import com.game.core.error.dto.ErrorMessage;
+import com.game.core.error.exception.member.NotFoundUserException;
 import com.game.core.member.dto.LoggedInMember;
 import com.game.core.member.infrastructure.UserRepository;
 import com.game.core.member.infrastructure.annotation.AuthMember;
@@ -49,7 +51,6 @@ public class AuthMemberArgumentResolver implements HandlerMethodArgumentResolver
         var authentication = getAuthenticationStrategy.get(request);
         var user = (UserDetails) authentication.getPrincipal();
         var users = userRepository.findByUserId(user.getUsername());
-        System.out.println(user);
         if (users!=null) {
             return Optional.of(
             LoggedInMember.builder()
