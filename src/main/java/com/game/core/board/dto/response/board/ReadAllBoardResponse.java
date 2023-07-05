@@ -12,6 +12,7 @@ public class ReadAllBoardResponse {
     private String title;
     private String content;
     private String type;
+    private Long viewCount;
     private LocalDateTime createTime;
     private LocalDateTime modified;
 }
