@@ -38,6 +38,7 @@ public class BoardConverter {
             .title(board.getTitle())
             .content(board.getContent())
             .type(String.valueOf(board.getType()))
+            .viewCount(board.getView())
             .createTime(board.getCreatedDate())
             .modified(board.getModifiedDate())
             .build();
