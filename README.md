@@ -1,21 +1,22 @@
-# RSE-Back-End
-🗣️ 프로젝트 리팩토링 브랜치 입니다.
----
+### 1. 프로젝트 주제
+>  **[프로젝트 게임](https://play.google.com/store/apps/details?id=com.DefaultCompany.Team_Project) 커뮤니티 사이트 입니다.**   
+> 커뮤니티를 중점으로 여러 종목의 게시판과 게임관련 자료를 확인 할 수 있는 서비스 입니다.
+     </br>
 
-### 현 프로젝트의 문제점
-> 한 요청에 많은 data들이 몰려서 잦은 오류(댓글 좋아요)
-> 가독성이 떨어지는 코드들(한 메서드에 여러 가능들이 몰려있다는 점)- 사진 첨부
-> 통일 되지 않은 코드 양식
+### 2. Back_End Server API 문서
+> 🔗 [BackServer](http://15.165.122.126:8080/swagger-ui/index.html#/)
+</br>
 
+### 3. Stack
+- Java 11
+- Spring boot 2.7.4
+- Spring Data JPA 2.7.3
+- Spring Security 5.7.3
+- Gradle
+- H2(local)
+- AWS (Ec2, S3, RDS)
+  </br>
 
-### 리팩토링 목표
-> 1. 클린코드 작성 원칙 사용   
->      - [ ] 가독성 (converter 패턴을 사용한 dto builder 로 리턴)
->      - [ ] 단위성 (클래스 메소드 함수 최소 단위로 불리)
->      - [ ] 의존성 (최소한의 의존성을 갖게 코드)
->      - [ ] 중복성 (중복되는 코드 추상화 및 converter 패턴으로 변경)
->      - [ ] 추상화 (동일한 수준의 추상화 구현)
->  2. 서버 과부화 테스트
->  3. ci/cd 적용 깃액션 적용
->  4. 성능 개선
-
+### 4. ERD 설계
+![ERD 설계](./img/ERD-RSE.png)
+</br>
